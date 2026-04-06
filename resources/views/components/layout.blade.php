@@ -31,7 +31,7 @@
 
                     <div class="relative group py-2">
                         <button
-                            class="text-slate-500 font-medium hover:text-academic-blue transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
+                            class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
                             Academic Hub
                         </button>
 
@@ -53,7 +53,7 @@
 
                     <div class="relative group py-2">
                         <button
-                            class="text-slate-500 font-medium hover:text-academic-blue transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
+                            class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
                             Planners
                         </button>
 
@@ -73,7 +73,7 @@
 
                     <div class="relative group py-2">
                         <button
-                            class="text-slate-500 font-medium hover:text-academic-blue transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
+                            class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
                             Calculator
                         </button>
 
@@ -91,7 +91,7 @@
                         </div>
                     </div>
 
-                    <a class="text-slate-500 font-medium hover:text-academic-blue transition-colors hover:border-b-2 hover:border-blue-500 pb-1"
+                    <a class="text-slate-500 font-medium hover:text-blue-700 transition-colors hover:border-b-2 hover:border-blue-500 pb-1"
                         href="#">Community</a>
                 </div>
             </div>
@@ -110,9 +110,7 @@
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 pt-10 pb-14 min-h-[calc(100vh-140px)]">
-        {{ $slot }}
-    </main>
+    {{ $slot }}
 
 </body>
 
