@@ -33,12 +33,24 @@
                         </div>
                         @error('email') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                     </div>
-                    <!-- Academic Department -->
+                    <!-- University -->
                     <div class="space-y-2">
-                        <label class="block text-xs uppercase tracking-widest font-bold text-gray-500/70" for="University">University</label>
+                        <label class="block text-xs uppercase tracking-widest font-bold text-gray-500/70" for="university">University</label>
                         <div class="relative group">
                             <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-700 transition-colors">school</span>
-                            <input class="w-full bg-slate-50 border border-gray-200 rounded-xl pl-14 pr-5 py-4 transition-all placeholder:text-gray-400" id="university" name="university" placeholder="Enter the name of your university" type="text" value="{{ old('university') }}" required />
+                            
+                            <input list="university-list" class="w-full bg-slate-50 border border-gray-200 focus:border-blue-700 focus:ring-4 focus:ring-blue-200 outline-none rounded-xl pl-14 pr-5 py-4 transition-all placeholder:text-gray-400" id="university" name="university" placeholder="Enter the name of your university" type="text" value="{{ old('university') }}" required autocomplete="on" />
+                            
+                            <datalist id="university-list">
+                                <option value="United International University (UIU)"></option>
+                                <option value="North South University (NSU)"></option>
+                                <option value="BRAC University (BRACU)"></option>
+                                <option value="American International University Bangladesh (AIUB)"></option>
+                                <option value="Independent University Bangladesh (IUB)"></option>
+                                <option value="East West University (EWU)"></option>
+                                <option value="University of Dhaka (DU)"></option>
+                                <option value="Bangladesh University of Engineering and Technology (BUET)"></option>
+                            </datalist>
                         </div>
                         @error('university') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                     </div>

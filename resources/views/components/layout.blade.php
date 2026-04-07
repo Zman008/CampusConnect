@@ -96,16 +96,31 @@
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <button
-                    class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
-                    onclick="window.location.href='/login'">
-                    Log In
-                </button>
-                <button
-                    class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
-                    onclick="window.location.href='/register'">
-                    Sign Up
-                </button>
+                @auth
+                    <span class="text-sm font-medium text-gray-600">Hello, {{ Auth::user()->username }}</span>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button
+                            class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
+                            type="submit">
+                            Log Out
+                        </button>
+                    </form>
+
+                @endauth
+                
+                @guest
+                    <button
+                        class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
+                        onclick="window.location.href='/login'">
+                        Log In
+                    </button>
+                    <button
+                        class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
+                        onclick="window.location.href='/register'">
+                        Sign Up
+                    </button>
+                @endguest
             </div>
         </div>
     </nav>

@@ -16,7 +16,7 @@ class RegisterController extends Controller
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'student_id' => ['required', 'string', 'max:255', 'unique:users'],
-            'university' => ['required', 'string', 'max:255'],
+            'university' => ['required', 'string', 'max:255', 'in:United International University (UIU),North South University (NSU),BRAC University (BRACU),American International University Bangladesh (AIUB),Independent University Bangladesh (IUB),East West University (EWU),University of Dhaka (DU),Bangladesh University of Engineering and Technology (BUET)'],
             'password' => ['required', 'string'],
         ]);
 
@@ -25,5 +25,6 @@ class RegisterController extends Controller
         Auth::login($user);
 
         return redirect()->route('homepage');
+
     }
 }
