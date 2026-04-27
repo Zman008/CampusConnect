@@ -11,6 +11,10 @@ class LoginController extends Controller
         return view('login');
     }
 
+    /**
+     * Handle authentication attempt.
+     * Redirects to 'dashboard' instead of 'homepage' upon success.
+     */
     public function authenticate(Request $request) {
         $credentials = $request->validate([
             'email' => ['required', 'string', 'email'],
@@ -20,7 +24,8 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('homepage'));
+            // UPDATED: Redirecting directly to the university workspace (dashboard)
+            return redirect()->intended(route('dashboard'));
         }
 
         return back()->withErrors([
@@ -28,6 +33,10 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
+    /**
+     * Handle user logout.
+     * Invalidates session and redirects back to the welcome page.
+     */
     public function logout(Request $request) {
         Auth::logout();
 

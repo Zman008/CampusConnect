@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,6 +12,10 @@ class RegisterController extends Controller
         return view('register');
     }
 
+    /**
+     * Handle a new registration request.
+     * Redirects to 'dashboard' instead of 'homepage' upon success.
+     */
     public function store(Request $request) {
         $validatedData = $request->validate([
             'username' => ['required', 'string', 'max:255'],
@@ -20,11 +25,13 @@ class RegisterController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $user = \App\Models\User::create($validatedData);
+        // Create the user (Password is hashed automatically by User Model casts)
+        $user = User::create($validatedData);
 
+        // Log the user in immediately
         Auth::login($user);
 
-        return redirect()->route('homepage');
-
+        // UPDATED: Direct redirect to the university workspace
+        return redirect()->route('dashboard');
     }
 }
