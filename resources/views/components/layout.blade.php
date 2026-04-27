@@ -20,14 +20,16 @@
         <div class="flex justify-between items-center w-full px-8 py-4 max-w-[80%] mx-auto">
             <div class="flex items-center gap-12 text-[#003366]">
                 <span class="text-2xl font-extrabold tracking-tighter flex items-center gap-2"
-                    onclick="window.location.href='/'" style="cursor: pointer;">
+                    onclick="window.location.href='/dashboard'" style="cursor: pointer;"> <!-- পরিবর্তন ১: লোগোতে ক্লিক করলে এখন সরাসরি ড্যাশবোর্ডে যাবে -->
                     <span class="w-10 h-10 bg-[#003366] rounded-full flex items-center justify-center">
                         <span class="material-symbols-outlined text-white font-thin text-xs text-[10px]">school</span>
                     </span>
                     Campus Connect
                 </span>
                 <div class="hidden md:flex items-center gap-8">
-                    <a class="font-bold border-b-2 border-blue-500 pb-1 transition-all" href="/">Dashboard</a>
+                    <!-- পরিবর্তন ২: নিচের লাইনে href="/" বদলে href="/dashboard" করা হয়েছে -->
+                    <!-- কারণ: "/" হলো হোমপেজ (খালি), আর "/dashboard" হলো আপনার আসল কাজের জায়গা -->
+                    <a class="{{ request()->is('dashboard') ? 'font-bold border-b-2 border-blue-500' : 'text-slate-500' }} pb-1 transition-all" href="/dashboard">Dashboard</a>
 
                     <div class="relative group py-2">
                         <button
