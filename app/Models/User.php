@@ -16,9 +16,6 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * একটি ইউজারের অনেকগুলো টাস্ক থাকতে পারে (Relationship)
-     */
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);

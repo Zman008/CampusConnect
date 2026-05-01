@@ -3,10 +3,10 @@
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\DashboardController; // এটা নতুন যোগ হয়েছে
+use App\Http\Controllers\DashboardController; 
+use App\Http\Controllers\PlannerController;
 use Illuminate\Support\Facades\Route;
 
-// ১. guest route(wil show without login)
 Route::get('/', [HomepageController::class, 'index'])->name('homepage');
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
@@ -14,7 +14,8 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-// ২. protected route (will show after login)
+Route::get('/course-planner', [PlannerController::class, 'index'])->name('course.planner');
+
 Route::middleware(['auth'])->group(function () {
     
     // dashboard main page
