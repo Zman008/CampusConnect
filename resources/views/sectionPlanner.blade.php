@@ -81,7 +81,7 @@
             alertBox.classList.add('hidden');
 
             // Extract Course Code and Section from the input value string
-            const match = inputVal.match(/(.+?)\s\[Sec\s(.+)\]/);
+            const match = inputVal.match(/(.+?)\s-\s.+?\[Sec\s(.+)\]/);
             if (!match) return; 
 
             const courseCode = match[1];
