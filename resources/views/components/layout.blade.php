@@ -64,7 +64,7 @@
                                 <a href="/course-planner"
                                     class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Course
                                     Planner</a>
-                                <a href="#"
+                                <a href="/section-planner"
                                     class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Section
                                     Planner</a>
                             </div>

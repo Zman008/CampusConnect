@@ -14,7 +14,8 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-Route::get('/course-planner', [PlannerController::class, 'index'])->name('course.planner');
+Route::get('/course-planner', [PlannerController::class, 'course'])->name('course.planner');
+Route::get('/section-planner', [PlannerController::class, 'section'])->name('section.planner');
 
 Route::middleware(['auth'])->group(function () {
     
