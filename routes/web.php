@@ -25,8 +25,15 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard main page
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Calculator Route (New)
+    // Calculator Routes
     Route::get('/calculator/cgpa', [DashboardController::class, 'cgpaCalculator'])->name('calculator.cgpa');
+    
+    /* 
+    |--------------------------------------------------------------------------
+    | NEW: Tuition Fee Calculator Route
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/calculator/tuition', [DashboardController::class, 'tuitionCalculator'])->name('calculator.tuition');
     
     // To-do list (Add, Toggle, Delete)
     Route::post('/tasks', [DashboardController::class, 'store'])->name('tasks.store');

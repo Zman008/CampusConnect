@@ -41,6 +41,14 @@ class DashboardController extends Controller
     }
 
     /**
+     * Show the Tuition Fee Calculator page.
+     */
+    public function tuitionCalculator()
+    {
+        return view('calculator.tuition');
+    }
+
+    /**
      * Store a new task in the database.
      */
     public function store(Request $request)

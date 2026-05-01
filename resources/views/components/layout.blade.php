@@ -27,7 +27,7 @@
                     Campus Connect
                 </span>
                 <div class="hidden md:flex items-center gap-8">
-                    <!-- Dashboard Link -->
+                    <!-- Navigation Links -->
                     <a class="{{ request()->is('dashboard') ? 'font-bold border-b-2 border-blue-500' : 'text-slate-500' }} pb-1 transition-all" href="/dashboard">Dashboard</a>
 
                     <!-- Academic Hub Dropdown -->
@@ -38,7 +38,7 @@
                         </button>
 
                         <div
-                            class="absolute left-1/2 -translate-x-1/2 left-0 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                             <div
                                 class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
                                 <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Question Bank</a>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <!-- Planners Dropdown (Teammate's Routes) -->
+                    <!-- Planners Dropdown -->
                     <div class="relative group py-2">
                         <button
                             class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
@@ -57,7 +57,7 @@
                         </button>
 
                         <div
-                            class="absolute left-1/2 -translate-x-1/2 left-0 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                             <div
                                 class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
                                 <a href="/course-planner" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Course Planner</a>
@@ -66,7 +66,7 @@
                         </div>
                     </div>
 
-                    <!-- Calculator Dropdown (Updated with CGPA Link) -->
+                    <!-- Calculator Dropdown -->
                     <div class="relative group py-2">
                         <button
                             class="{{ request()->is('calculator/*') ? 'text-blue-700 font-bold border-b-2 border-blue-500' : 'text-slate-500' }} font-medium hover:text-blue-700 transition-colors pb-1 flex items-center gap-1 cursor-pointer">
@@ -74,12 +74,17 @@
                         </button>
 
                         <div
-                            class="absolute left-1/2 -translate-x-1/2 left-0 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                             <div
                                 class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
-                                <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Tuition Fee Calculator</a>
                                 
-                                <!-- Updated: Link to the CGPA Calculator route -->
+                                <!-- Updated: Link to the Tuition Fee Calculator route -->
+                                <a href="{{ route('calculator.tuition') }}" 
+                                   class="px-4 py-2.5 text-sm {{ request()->routeIs('calculator.tuition') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">
+                                   Tuition Fee Calculator
+                                </a>
+
+                                <!-- Link to the CGPA Calculator route -->
                                 <a href="{{ route('calculator.cgpa') }}"
                                     class="px-4 py-2.5 text-sm {{ request()->routeIs('calculator.cgpa') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">
                                     CGPA Calculator
@@ -103,7 +108,6 @@
                             Log Out
                         </button>
                     </form>
-
                 @endauth
                 
                 @guest
