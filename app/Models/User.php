@@ -21,11 +21,15 @@ class User extends Authenticatable
         return $this->hasMany(Task::class);
     }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    public function userExamRoutines(): HasMany
+    {
+        return $this->hasMany(UserExamRoutine::class);
+    }
+
+    public function userSectionRoutines(): HasMany
+    {
+        return $this->hasMany(UserSectionRoutine::class);
+    }
     protected function casts(): array
     {
         return [

@@ -23,6 +23,14 @@
                     <button onclick="addCourse()" class="bg-[#003366] text-white px-6 py-3 rounded-lg hover:bg-blue-800 font-medium">
                         Add Course
                     </button>
+                    <button onclick="clearAllRoutine()" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 font-medium">
+                        Clear All
+                    </button>
+                    @auth
+                    <button onclick="saveRoutine()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-medium">
+                        Save Routine
+                    </button>
+                    @endauth
                 </div>
 
                 <div id="conflictAlert" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -51,7 +59,8 @@
     <script>
         // 1. Pass the Laravel database collection directly to JavaScript!
         const databaseCourses = @json($allCourses);
-        let mySelectedCourses = [];
+        let mySelectedCourses = @json($userRoutines->toArray());
+        const isLoggedIn = @auth true @else false @endauth;
 
         function addCourse() {
             const inputVal = document.getElementById('courseInput').value;
@@ -87,9 +96,11 @@
         }
 
         function removeCourse(courseId) {
-            mySelectedCourses = mySelectedCourses.filter(c => c.id !== courseId);
+            courseId = parseInt(courseId);
+            mySelectedCourses = mySelectedCourses.filter(c => parseInt(c.id) !== courseId);
             document.getElementById('conflictAlert').classList.add('hidden'); // clear errors
             renderTable();
+            if (isLoggedIn) saveRoutine();
         }
 
         // Helper to convert 1,2,3 into readable times
@@ -119,6 +130,33 @@
                 `;
             });
         }
+
+        function saveRoutine() {
+            const routineIds = mySelectedCourses.map(c => c.id);
+            fetch('/course-planner/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ routines: routineIds })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Error:', error));
+        }
+
+        function clearAllRoutine() {
+            if (confirm('Are you sure you want to clear all courses? This action cannot be undone.')) {
+                mySelectedCourses = [];
+                document.getElementById('conflictAlert').classList.add('hidden');
+                renderTable();
+                if (isLoggedIn) saveRoutine();
+            }
+        }
+
+        // Initialize table on load
+        renderTable();
     </script>
 </body>
 </html>

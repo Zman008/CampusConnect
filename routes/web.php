@@ -46,4 +46,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // Planner Save Routes
+    Route::post('/course-planner/save', [PlannerController::class, 'saveCourseRoutine'])->name('course.planner.save');
+    Route::post('/section-planner/save', [PlannerController::class, 'saveSectionRoutine'])->name('section.planner.save');
 });
