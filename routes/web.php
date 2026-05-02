@@ -3,8 +3,9 @@
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\DashboardController; 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlannerController;
+use App\Http\Controllers\AcademicCalendarController;
 use Illuminate\Support\Facades\Route;
 
 // 1. Guest Routes
@@ -19,22 +20,25 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register.s
 Route::get('/course-planner', [PlannerController::class, 'course'])->name('course.planner');
 Route::get('/section-planner', [PlannerController::class, 'section'])->name('section.planner');
 
+Route::get('/academic-calendar', [AcademicCalendarController::class, 'index'])->name('academic.calendar');
+
+
 // 3. Protected Routes (Requires Login)
 Route::middleware(['auth'])->group(function () {
-    
+
     // Dashboard main page
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Calculator Routes
     Route::get('/calculator/cgpa', [DashboardController::class, 'cgpaCalculator'])->name('calculator.cgpa');
-    
-    /* 
+
+    /*
     |--------------------------------------------------------------------------
     | NEW: Tuition Fee Calculator Route
     |--------------------------------------------------------------------------
     */
     Route::get('/calculator/tuition', [DashboardController::class, 'tuitionCalculator'])->name('calculator.tuition');
-    
+
     // To-do list (Add, Toggle, Delete)
     Route::post('/tasks', [DashboardController::class, 'store'])->name('tasks.store');
     Route::patch('/tasks/{task}/toggle', [DashboardController::class, 'toggle'])->name('tasks.toggle');

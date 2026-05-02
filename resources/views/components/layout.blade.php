@@ -20,7 +20,7 @@
         <div class="flex justify-between items-center w-full px-8 py-4 max-w-[80%] mx-auto">
             <div class="flex items-center gap-12 text-[#003366]">
                 <span class="text-2xl font-extrabold tracking-tighter flex items-center gap-2"
-                    onclick="window.location.href='/dashboard'" style="cursor: pointer;"> 
+                    onclick="window.location.href='/dashboard'" style="cursor: pointer;">
                     <span class="w-10 h-10 bg-[#003366] rounded-full flex items-center justify-center">
                         <span class="material-symbols-outlined text-white font-thin text-xs text-[10px]">school</span>
                     </span>
@@ -44,7 +44,7 @@
                                 <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Question Bank</a>
                                 <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Course Material</a>
                                 <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Class Links</a>
-                                <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Academic Calendar</a>
+                                <a href="/academic-calendar" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Academic Calendar</a>
                             </div>
                         </div>
                     </div>
@@ -77,9 +77,9 @@
                             class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                             <div
                                 class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
-                                
+
                                 <!-- Updated: Link to the Tuition Fee Calculator route -->
-                                <a href="{{ route('calculator.tuition') }}" 
+                                <a href="{{ route('calculator.tuition') }}"
                                    class="px-4 py-2.5 text-sm {{ request()->routeIs('calculator.tuition') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">
                                    Tuition Fee Calculator
                                 </a>
@@ -109,7 +109,7 @@
                         </button>
                     </form>
                 @endauth
-                
+
                 @guest
                     <button
                         class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
