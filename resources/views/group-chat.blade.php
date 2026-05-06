@@ -1,17 +1,42 @@
 <x-layout>
     <x-slot:title>{{ $group->name }} | CampusConnect</x-slot:title>
 
-    <main class="pt-28 pb-12 bg-[#fdfdfd] min-h-screen antialiased">
-        <div class="max-w-[1600px] mx-auto px-6 md:px-12">
-            <div class="mb-8">
-                <a href="{{ route('community') }}" class="text-blue-600 hover:text-blue-800 mb-2 inline-block">&larr; Back to Community</a>
-                <h1 class="text-4xl font-black text-[#003366] tracking-tight">{{ $group->name }}</h1>
-                <p class="text-gray-600">{{ $group->description }}</p>
-            </div>
+    <main class="pt-20 bg-[#fdfdfd] h-screen box-border overflow-hidden antialiased">
+        <div class="h-full flex flex-col md:flex-row">
+            <aside class="w-full md:w-80 lg:w-96 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex-shrink-0 flex flex-col max-h-56 md:max-h-none">
+                <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3">
+                    <div>
+                        <p class="text-xs font-bold uppercase text-slate-400">Community</p>
+                        <h1 class="text-xl font-black text-[#003366]">Groups</h1>
+                    </div>
+                    <a href="{{ route('community') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-800">Browse</a>
+                </div>
 
-            <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 flex flex-col h-screen md:h-auto md:max-h-[600px]">
-                <!-- Messages Container -->
-                <div id="messages-container" class="flex-1 overflow-y-auto mb-4 space-y-4 bg-gray-50 p-4 rounded-lg">
+                <nav class="flex-1 overflow-y-auto p-3 space-y-2">
+                    @foreach($groups as $communityGroup)
+                        <a
+                            href="{{ route('community.group', $communityGroup->id) }}"
+                            class="block rounded-lg border px-4 py-3 transition-colors {{ $communityGroup->id === $group->id ? 'border-blue-200 bg-blue-50' : 'border-transparent hover:bg-slate-50' }}"
+                        >
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="min-w-0">
+                                    <p class="font-bold text-sm {{ $communityGroup->id === $group->id ? 'text-blue-800' : 'text-slate-800' }}">{{ $communityGroup->name }}</p>
+                                    <p class="text-xs text-slate-500 truncate">{{ $communityGroup->description }}</p>
+                                </div>
+                                <span class="text-xs font-semibold text-slate-400 flex-shrink-0">{{ $communityGroup->messages_count }}</span>
+                            </div>
+                        </a>
+                    @endforeach
+                </nav>
+            </aside>
+
+            <section class="flex-1 min-w-0 h-full flex flex-col bg-white">
+                <header class="px-5 md:px-8 py-4 border-b border-gray-100 flex-shrink-0">
+                    <h2 class="text-2xl md:text-3xl font-black text-[#003366] tracking-tight">{{ $group->name }}</h2>
+                    <p class="text-sm md:text-base text-slate-500 truncate">{{ $group->description }}</p>
+                </header>
+
+                <div id="messages-container" class="flex-1 min-h-0 overflow-y-auto space-y-4 bg-gray-50 px-5 md:px-8 py-6">
                     @forelse($messages as $message)
                         <div class="flex items-start gap-3" data-message-id="{{ $message->id }}">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0" style="background-color: var(--avatar-color-{{ strtoupper(substr($message->user->username, 0, 1)) }});">
@@ -30,27 +55,27 @@
                     @endforelse
                 </div>
 
-                <!-- Message Input -->
-                <div class="border-t pt-4">
+                <div class="border-t border-gray-200 bg-white px-5 md:px-8 py-4 flex-shrink-0">
                     <form id="message-form" onsubmit="return sendMessage(event)" action="{{ route('community.message.send', $group->id) }}" method="POST" class="flex gap-2">
                         @csrf
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             id="message-input"
                             name="message"
-                            placeholder="Type your message..." 
-                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Type your message..."
+                            class="flex-1 min-w-0 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             maxlength="1000"
+                            autocomplete="off"
                         >
-                        <button 
-                            type="submit" 
-                            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                        <button
+                            type="submit"
+                            class="bg-blue-600 text-white px-5 md:px-7 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex-shrink-0"
                         >
                             Send
                         </button>
                     </form>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
 
@@ -96,38 +121,31 @@
         }
     </style>
     <script>
-        function getAvatarColor(letter) {
-            const key = `--avatar-color-${letter.toUpperCase()}`;
-            return `var(${key})`;
-        }
         const groupId = {{ $group->id }};
         const userId = {{ Auth::id() }};
         const username = @json(Auth::user()->username);
         let lastMessageId = {{ $messages->max('id') ?? 0 }};
         let isFetchingMessages = false;
 
-        // Initialize Echo broadcasting if available
         if (window.Echo) {
-            // Subscribe to the private channel for this group
             window.Echo.private(`community.group.${groupId}`)
                 .listen('.message.sent', (data) => {
                     addMessageToUI(data.message);
                 });
         }
 
-        // Handle form submission with AJAX
         function sendMessage(event) {
             event.preventDefault();
-            
+
             const messageInput = document.getElementById('message-input');
             const message = messageInput.value.trim();
-            
+
             if (!message) return false;
 
             const form = document.getElementById('message-form');
             const submitButton = form.querySelector('button[type="submit"]');
             const tokenElement = form.querySelector('input[name="_token"]');
-            
+
             if (!tokenElement) {
                 console.error('CSRF token not found');
                 alert('Security token missing. Please refresh the page.');
@@ -137,7 +155,6 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Sending...';
 
-            // Send message to server using AJAX
             fetch(`/community/group/${groupId}/message`, {
                 method: 'POST',
                 headers: {
@@ -148,7 +165,6 @@
                 body: JSON.stringify({ message: message })
             })
             .then(response => {
-                console.log('Response status:', response.status);
                 if (!response.ok) {
                     return response.json().then(err => {
                         throw new Error(err.message || `HTTP error! status: ${response.status}`);
@@ -159,7 +175,6 @@
                 return response.json();
             })
             .then(data => {
-                console.log('Success response:', data);
                 if (data.success) {
                     messageInput.value = '';
                     messageInput.focus();
@@ -180,17 +195,14 @@
             return false;
         }
 
-        // Add message to UI
         function addMessageToUI(message) {
             const container = document.getElementById('messages-container');
-            
-            // Check if this is the first message (no messages placeholder)
             const emptyMessage = container.querySelector('p.text-center');
+
             if (emptyMessage) {
                 emptyMessage.remove();
             }
 
-            // Check if message already exists (to prevent duplicates)
             if (document.querySelector(`[data-message-id="${message.id}"]`)) {
                 return;
             }
@@ -200,7 +212,7 @@
             const messageDiv = document.createElement('div');
             messageDiv.className = 'flex items-start gap-3';
             messageDiv.setAttribute('data-message-id', message.id);
-            
+
             const timeStr = new Date(message.created_at).toLocaleString('en-US', {
                 month: 'short',
                 day: 'numeric',
@@ -209,9 +221,11 @@
                 hour12: false
             });
 
+            const avatarLetter = message.user.username.charAt(0).toUpperCase();
+
             messageDiv.innerHTML = `
-                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0" style="background-color: var(--avatar-color-${message.user.username.charAt(0).toUpperCase()});">
-                    ${escapeHtml(message.user.username.charAt(0).toUpperCase())}
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0" style="background-color: var(--avatar-color-${avatarLetter});">
+                    ${escapeHtml(avatarLetter)}
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2">
@@ -223,11 +237,9 @@
             `;
 
             container.appendChild(messageDiv);
-            // Auto-scroll to bottom
             container.scrollTop = container.scrollHeight;
         }
 
-        // Escape HTML to prevent XSS
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -274,7 +286,6 @@
             }
         });
 
-        // Scroll to bottom on page load
         window.addEventListener('load', () => {
             const container = document.getElementById('messages-container');
             setTimeout(() => {

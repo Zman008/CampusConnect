@@ -19,9 +19,10 @@ class CommunityController extends Controller
     public function showGroup($groupId)
     {
         $group = CommunityGroup::findOrFail($groupId);
+        $groups = CommunityGroup::withCount('messages')->orderBy('name')->get();
         $messages = $group->messages()->with('user')->orderBy('created_at', 'asc')->get();
         
-        return view('group-chat', compact('group', 'messages'));
+        return view('group-chat', compact('group', 'groups', 'messages'));
     }
 
     public function sendMessage(Request $request, $groupId)
