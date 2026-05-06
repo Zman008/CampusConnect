@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Broadcast;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Define broadcast channel authorization
+        Broadcast::channel('community.group.{groupId}', function ($user, $groupId) {
+            // Allow any authenticated user to join the channel
+            return (bool) $user;
+        });
     }
 }

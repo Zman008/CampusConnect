@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlannerController;
 use App\Http\Controllers\AcademicCalendarController;
+use App\Http\Controllers\CommunityController;
 use Illuminate\Support\Facades\Route;
 
 // 1. Guest Routes
@@ -46,6 +47,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    // Community Routes
+    Route::get('/community', [CommunityController::class, 'index'])->name('community');
+    Route::get('/community/group/{groupId}', [CommunityController::class, 'showGroup'])->name('community.group');
+    Route::post('/community/group/{groupId}/message', [CommunityController::class, 'sendMessage'])->name('community.message.send');
+    Route::get('/community/group/{groupId}/messages', [CommunityController::class, 'getMessages'])->name('community.messages.get');
 
     // Planner Save Routes
     Route::post('/course-planner/save', [PlannerController::class, 'saveCourseRoutine'])->name('course.planner.save');

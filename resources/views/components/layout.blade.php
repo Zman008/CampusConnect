@@ -94,8 +94,8 @@
                         </div>
                     </div>
 
-                    <a class="text-slate-500 font-medium hover:text-blue-700 transition-colors hover:border-b-2 hover:border-blue-500 pb-1"
-                        href="#">Community</a>
+                    <a class="{{ request()->is('community*') ? 'font-bold border-b-2 border-blue-500' : 'text-slate-500' }} font-medium hover:text-blue-700 transition-colors hover:border-b-2 hover:border-blue-500 pb-1"
+                        href="{{ route('community') }}">Community</a>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -129,6 +129,7 @@
 
     {{ $slot }}
 
+    @stack('scripts')
 </body>
 
 </html>
