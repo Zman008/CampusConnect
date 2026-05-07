@@ -127,13 +127,6 @@
         let lastMessageId = {{ $messages->max('id') ?? 0 }};
         let isFetchingMessages = false;
 
-        if (window.Echo) {
-            window.Echo.private(`community.group.${groupId}`)
-                .listen('.message.sent', (data) => {
-                    addMessageToUI(data.message);
-                });
-        }
-
         function sendMessage(event) {
             event.preventDefault();
 

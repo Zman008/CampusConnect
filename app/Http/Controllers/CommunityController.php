@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\CommunityGroup;
 use App\Models\CommunityMessage;
-use App\Events\MessageSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,11 +39,7 @@ class CommunityController extends Controller
                 'message' => $validated['message'],
             ]);
 
-            // Load the user relationship
             $message->load('user');
-
-            // Broadcast the message
-            broadcast(new MessageSent($message))->toOthers();
 
             if (! $request->expectsJson()) {
                 return redirect()
