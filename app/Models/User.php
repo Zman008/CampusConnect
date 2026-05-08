@@ -30,6 +30,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserSectionRoutine::class);
     }
+
+    public function communityMessages(): HasMany
+    {
+        return $this->hasMany(CommunityMessage::class);
+    }
+
     protected function casts(): array
     {
         return [
