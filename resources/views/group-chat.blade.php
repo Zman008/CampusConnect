@@ -1,9 +1,9 @@
 <x-layout>
     <x-slot:title>{{ $group->name }} | CampusConnect</x-slot:title>
 
-    <main class="pt-20 bg-[#fdfdfd] h-screen box-border overflow-hidden antialiased">
+    <main class="pt-20 bg-slate-100 h-screen box-border overflow-hidden antialiased">
         <div class="h-full flex flex-col md:flex-row">
-            <aside class="w-full md:w-80 lg:w-96 bg-white border-b md:border-b-0 md:border-r border-gray-200 flex-shrink-0 flex flex-col max-h-56 md:max-h-none">
+            <aside class="w-full md:w-80 lg:w-96 bg-white border-b md:border-b-0 md:border-r border-slate-200 flex-shrink-0 flex flex-col max-h-56 md:max-h-none">
                 <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between gap-3">
                     <div>
                         <p class="text-xs font-bold uppercase text-slate-400">Community</p>
@@ -31,23 +31,48 @@
             </aside>
 
             <section class="flex-1 min-w-0 h-full flex flex-col bg-white">
-                <header class="px-5 md:px-8 py-4 border-b border-gray-100 flex-shrink-0">
+                <header class="px-5 md:px-8 py-4 border-b border-slate-200 flex-shrink-0 bg-white">
                     <h2 class="text-2xl md:text-3xl font-black text-[#003366] tracking-tight">{{ $group->name }}</h2>
                     <p class="text-sm md:text-base text-slate-500 truncate">{{ $group->description }}</p>
+                    @if (session('success'))
+                        <p class="mt-2 text-sm font-semibold text-green-700">{{ session('success') }}</p>
+                    @endif
+                    @if ($errors->any())
+                        <p class="mt-2 text-sm font-semibold text-red-700">{{ $errors->first() }}</p>
+                    @endif
                 </header>
 
-                <div id="messages-container" class="flex-1 min-h-0 overflow-y-auto space-y-4 bg-gray-50 px-5 md:px-8 py-6">
+                <div id="messages-container" class="flex-1 min-h-0 overflow-y-auto space-y-4 bg-slate-50 px-4 md:px-8 py-6">
                     @forelse($messages as $message)
-                        <div class="flex items-start gap-3" data-message-id="{{ $message->id }}">
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0" style="background-color: var(--avatar-color-{{ strtoupper(substr($message->user->username, 0, 1)) }});">
+                        <div class="message-row flex items-start gap-3 group/message {{ $message->user_id === Auth::id() ? 'justify-end' : '' }}" data-message-id="{{ $message->id }}">
+                            @if ($message->user_id !== Auth::id())
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 shadow-sm" style="background-color: var(--avatar-color-{{ strtoupper(substr($message->user->username, 0, 1)) }});">
                                 {{ substr($message->user->username, 0, 1) }}
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-2">
-                                    <p class="font-semibold text-gray-800">{{ $message->user->username }}</p>
-                                    <p class="text-xs text-gray-400">{{ $message->created_at->format('M d, H:i') }}</p>
+                            @endif
+                            <div class="message-bubble relative max-w-[86%] md:max-w-[70%] rounded-2xl px-4 py-3 shadow-sm {{ $message->user_id === Auth::id() ? 'bg-blue-700 text-white rounded-br-md' : 'bg-white border border-slate-200 text-slate-800 rounded-bl-md' }}">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="min-w-0">
+                                        <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                            <p class="font-bold text-sm {{ $message->user_id === Auth::id() ? 'text-white' : 'text-slate-900' }}">{{ $message->user->username }}</p>
+                                            <p class="text-xs {{ $message->user_id === Auth::id() ? 'text-blue-100' : 'text-slate-400' }}">{{ $message->created_at->format('M d, H:i') }}</p>
+                                        </div>
+                                        <p class="mt-1 break-words leading-relaxed {{ $message->user_id === Auth::id() ? 'text-blue-50' : 'text-slate-700' }}">{{ $message->message }}</p>
+                                    </div>
+                                    @if ($message->user_id !== Auth::id())
+                                        <div class="relative flex-shrink-0">
+                                            <button type="button" class="message-menu-button w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100" aria-label="Message options" onclick="toggleMessageMenu(event, {{ $message->id }})">
+                                                <span class="material-symbols-outlined text-xl">more_vert</span>
+                                            </button>
+                                            <div id="message-menu-{{ $message->id }}" class="message-menu hidden absolute right-0 top-9 z-20 w-36 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+                                                <form method="POST" action="{{ route('community.message.report', [$group->id, $message]) }}">
+                                                    @csrf
+                                                    <button class="w-full px-4 py-2 text-left text-sm font-semibold text-red-700 hover:bg-red-50">Report message</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
-                                <p class="text-gray-600 break-words">{{ $message->message }}</p>
                             </div>
                         </div>
                     @empty
@@ -55,7 +80,7 @@
                     @endforelse
                 </div>
 
-                <div class="border-t border-gray-200 bg-white px-5 md:px-8 py-4 flex-shrink-0">
+                <div class="border-t border-slate-200 bg-white px-5 md:px-8 py-4 flex-shrink-0">
                     <form id="message-form" onsubmit="return sendMessage(event)" action="{{ route('community.message.send', $group->id) }}" method="POST" class="flex gap-2">
                         @csrf
                         <input
@@ -63,13 +88,13 @@
                             id="message-input"
                             name="message"
                             placeholder="Type your message..."
-                            class="flex-1 min-w-0 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            class="flex-1 min-w-0 px-4 py-3 border border-slate-300 rounded-full bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             maxlength="1000"
                             autocomplete="off"
                         >
                         <button
                             type="submit"
-                            class="bg-blue-600 text-white px-5 md:px-7 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium flex-shrink-0"
+                            class="bg-blue-700 text-white px-5 md:px-7 py-3 rounded-full hover:bg-blue-800 transition-colors font-bold flex-shrink-0"
                         >
                             Send
                         </button>
@@ -215,23 +240,63 @@
             });
 
             const avatarLetter = message.user.username.charAt(0).toUpperCase();
-
-            messageDiv.innerHTML = `
-                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0" style="background-color: var(--avatar-color-${avatarLetter});">
-                    ${escapeHtml(avatarLetter)}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2">
-                        <p class="font-semibold text-gray-800">${escapeHtml(message.user.username)}</p>
-                        <p class="text-xs text-gray-400">${timeStr}</p>
+            const isOwnMessage = Number(message.user_id) === Number(userId);
+            const reportMenu = isOwnMessage ? '' : `
+                <div class="relative flex-shrink-0">
+                    <button type="button" class="message-menu-button w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100" aria-label="Message options" onclick="toggleMessageMenu(event, ${Number(message.id)})">
+                        <span class="material-symbols-outlined text-xl">more_vert</span>
+                    </button>
+                    <div id="message-menu-${Number(message.id)}" class="message-menu hidden absolute right-0 top-9 z-20 w-36 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+                        <form method="POST" action="/community/group/${groupId}/message/${Number(message.id)}/report">
+                            <input type="hidden" name="_token" value="${escapeHtml(document.querySelector('meta[name="csrf-token"]').content)}">
+                            <button class="w-full px-4 py-2 text-left text-sm font-semibold text-red-700 hover:bg-red-50">Report message</button>
+                        </form>
                     </div>
-                    <p class="text-gray-600 break-words">${escapeHtml(message.message)}</p>
                 </div>
             `;
+
+            messageDiv.innerHTML = `
+                ${isOwnMessage ? '' : `
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 shadow-sm" style="background-color: var(--avatar-color-${avatarLetter});">
+                        ${escapeHtml(avatarLetter)}
+                    </div>
+                `}
+                <div class="message-bubble relative max-w-[86%] md:max-w-[70%] rounded-2xl px-4 py-3 shadow-sm ${isOwnMessage ? 'bg-blue-700 text-white rounded-br-md' : 'bg-white border border-slate-200 text-slate-800 rounded-bl-md'}">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="min-w-0">
+                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <p class="font-bold text-sm ${isOwnMessage ? 'text-white' : 'text-slate-900'}">${escapeHtml(message.user.username)}</p>
+                                <p class="text-xs ${isOwnMessage ? 'text-blue-100' : 'text-slate-400'}">${timeStr}</p>
+                            </div>
+                            <p class="mt-1 break-words leading-relaxed ${isOwnMessage ? 'text-blue-50' : 'text-slate-700'}">${escapeHtml(message.message)}</p>
+                        </div>
+                        ${reportMenu}
+                    </div>
+                </div>
+            `;
+
+            if (isOwnMessage) {
+                messageDiv.classList.add('justify-end');
+            }
 
             container.appendChild(messageDiv);
             container.scrollTop = container.scrollHeight;
         }
+
+        function toggleMessageMenu(event, messageId) {
+            event.stopPropagation();
+            document.querySelectorAll('.message-menu').forEach(menu => {
+                if (menu.id !== `message-menu-${messageId}`) {
+                    menu.classList.add('hidden');
+                }
+            });
+
+            document.getElementById(`message-menu-${messageId}`)?.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.message-menu').forEach(menu => menu.classList.add('hidden'));
+        });
 
         function escapeHtml(text) {
             const div = document.createElement('div');

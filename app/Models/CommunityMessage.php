@@ -15,7 +15,17 @@ class CommunityMessage extends Model
         'group_id',
         'user_id',
         'message',
+        'reported_at',
+        'reported_by_user_id',
+        'report_reason',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'reported_at' => 'datetime',
+        ];
+    }
 
     public function group()
     {
@@ -25,6 +35,11 @@ class CommunityMessage extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function reportedBy()
+    {
+        return $this->belongsTo(User::class, 'reported_by_user_id');
     }
 
 }

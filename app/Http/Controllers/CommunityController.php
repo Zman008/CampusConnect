@@ -11,12 +11,20 @@ class CommunityController extends Controller
 {
     public function index()
     {
+        if ($blockedResponse = $this->blockBannedUser()) {
+            return $blockedResponse;
+        }
+
         $groups = CommunityGroup::all();
         return view('community', compact('groups'));
     }
 
     public function showGroup($groupId)
     {
+        if ($blockedResponse = $this->blockBannedUser()) {
+            return $blockedResponse;
+        }
+
         $group = CommunityGroup::findOrFail($groupId);
         $groups = CommunityGroup::withCount('messages')->orderBy('name')->get();
         $messages = $group->messages()->with('user')->orderBy('created_at', 'asc')->get();
@@ -27,6 +35,10 @@ class CommunityController extends Controller
     public function sendMessage(Request $request, $groupId)
     {
         try {
+            if ($blockedResponse = $this->blockBannedUser($request)) {
+                return $blockedResponse;
+            }
+
             $validated = $request->validate([
                 'message' => 'required|string|max:1000',
             ]);
@@ -74,6 +86,10 @@ class CommunityController extends Controller
 
     public function getMessages(Request $request, $groupId)
     {
+        if ($blockedResponse = $this->blockBannedUser($request)) {
+            return $blockedResponse;
+        }
+
         $group = CommunityGroup::findOrFail($groupId);
         $messages = $group->messages()
             ->with('user')
@@ -86,5 +102,45 @@ class CommunityController extends Controller
         return response()->json([
             'messages' => $messages,
         ]);
+    }
+
+    public function reportMessage(Request $request, $groupId, CommunityMessage $message)
+    {
+        if ($blockedResponse = $this->blockBannedUser($request)) {
+            return $blockedResponse;
+        }
+
+        CommunityGroup::findOrFail($groupId);
+        abort_unless((int) $message->group_id === (int) $groupId, 404);
+
+        $validated = $request->validate([
+            'reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $message->update([
+            'reported_at' => now(),
+            'reported_by_user_id' => Auth::id(),
+            'report_reason' => $validated['reason'] ?? 'Reported from community chat',
+        ]);
+
+        return back()->with('success', 'Message reported to admin.');
+    }
+
+    private function blockBannedUser(?Request $request = null)
+    {
+        if (! Auth::user()?->banned_at) {
+            return null;
+        }
+
+        if ($request?->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'error' => 'You cannot access the community page.',
+            ], 403);
+        }
+
+        return redirect()
+            ->route('dashboard')
+            ->with('community_blocked', 'You cannot access the community page.');
     }
 }

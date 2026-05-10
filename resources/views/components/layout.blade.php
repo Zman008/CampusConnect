@@ -18,7 +18,7 @@
 <body class="bg-gray-100 text-gray-900 selection:bg-orange-300">
     <!-- TopNavBar -->
     <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
-        <div class="flex justify-between items-center w-full px-8 py-4 max-w-[80%] mx-auto">
+        <div class="flex justify-between items-center w-full px-8 py-4 max-w-[90%] mx-auto">
             <div class="flex items-center gap-12 text-[#003366]">
                 <span class="text-2xl font-extrabold tracking-tighter flex items-center gap-2"
                     onclick="window.location.href='/dashboard'" style="cursor: pointer;">
@@ -126,6 +126,27 @@
             </div>
         </div>
     </nav>
+
+    @if (session('community_blocked'))
+        <div id="community-blocked-popup" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/40 px-5">
+            <div class="w-full max-w-md rounded-xl bg-white p-6 shadow-2xl border border-slate-200">
+                <div class="flex items-start gap-4">
+                    <div class="w-11 h-11 rounded-full bg-red-100 text-red-700 flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined">block</span>
+                    </div>
+                    <div class="min-w-0">
+                        <h2 class="text-xl font-black text-[#003366]">Community access blocked</h2>
+                        <p class="mt-2 text-sm leading-6 text-slate-600">{{ session('community_blocked') }}</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button type="button" onclick="document.getElementById('community-blocked-popup')?.remove()" class="rounded-lg bg-[#003366] px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-900 transition-colors">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
 
     {{ $slot }}
 
