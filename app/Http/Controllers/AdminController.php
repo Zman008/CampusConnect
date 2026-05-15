@@ -81,7 +81,7 @@ class AdminController extends Controller
 
         ExamRoutine::create($this->validateExamRoutine($request));
 
-        return back()->with('success', 'Exam routine added.');
+        return redirect(route('admin.index') . '#exam')->with('success', 'Exam routine added.');
     }
 
     public function updateExamRoutine(Request $request, ExamRoutine $examRoutine)
@@ -89,7 +89,7 @@ class AdminController extends Controller
         $this->ensureAdmin();
         $examRoutine->update($this->validateExamRoutine($request, $examRoutine));
 
-        return back()->with('success', 'Exam routine updated.');
+        return redirect(route('admin.index') . '#exam')->with('success', 'Exam routine updated.');
     }
 
     public function deleteExamRoutine(ExamRoutine $examRoutine)
@@ -97,7 +97,7 @@ class AdminController extends Controller
         $this->ensureAdmin();
         $examRoutine->delete();
 
-        return back()->with('success', 'Exam routine deleted.');
+        return redirect(route('admin.index') . '#exam')->with('success', 'Exam routine deleted.');
     }
 
     public function storeSectionRoutine(Request $request)
@@ -106,7 +106,7 @@ class AdminController extends Controller
 
         SectionRoutine::create($this->validateSectionRoutine($request));
 
-        return back()->with('success', 'Section routine added.');
+        return redirect(route('admin.index') . '#section')->with('success', 'Section routine added.');
     }
 
     public function updateSectionRoutine(Request $request, SectionRoutine $sectionRoutine)
@@ -114,7 +114,7 @@ class AdminController extends Controller
         $this->ensureAdmin();
         $sectionRoutine->update($this->validateSectionRoutine($request));
 
-        return back()->with('success', 'Section routine updated.');
+        return redirect(route('admin.index') . '#section')->with('success', 'Section routine updated.');
     }
 
     public function deleteSectionRoutine(SectionRoutine $sectionRoutine)
@@ -122,7 +122,7 @@ class AdminController extends Controller
         $this->ensureAdmin();
         $sectionRoutine->delete();
 
-        return back()->with('success', 'Section routine deleted.');
+        return redirect(route('admin.index') . '#section')->with('success', 'Section routine deleted.');
     }
 
     public function banUser(User $user)
@@ -130,7 +130,7 @@ class AdminController extends Controller
         $this->ensureAdmin();
         $user->forceFill(['banned_at' => now()])->save();
 
-        return back()->with('success', "{$user->username} has been banned.");
+        return redirect(route('admin.index') . '#reports')->with('success', "{$user->username} has been banned.");
     }
 
     public function unbanUser(User $user)
@@ -138,7 +138,7 @@ class AdminController extends Controller
         $this->ensureAdmin();
         $user->forceFill(['banned_at' => null])->save();
 
-        return back()->with('success', "{$user->username} has been unbanned.");
+        return redirect(route('admin.index') . '#reports')->with('success', "{$user->username} has been unbanned.");
     }
 
     private function validateExamRoutine(Request $request, ?ExamRoutine $examRoutine = null): array
