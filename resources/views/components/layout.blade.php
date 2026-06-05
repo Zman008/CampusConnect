@@ -105,6 +105,7 @@
                         @csrf
                         <button
                             class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
+                            id="logoutButton"
                             type="submit">
                             Log Out
                         </button>
