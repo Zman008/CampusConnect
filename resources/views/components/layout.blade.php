@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap"
         rel="stylesheet" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <title>{{ $title ?? 'CampusConnect' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -28,7 +28,8 @@
                     Campus Connect
                 </span>
                 <div class="hidden md:flex items-center gap-8">
-                    <!-- Navigation Links -->
+
+                    <!-- Dashboard -->
                     <a class="{{ request()->is('dashboard') ? 'font-bold border-b-2 border-blue-500' : 'text-slate-500' }} pb-1 transition-all" href="/dashboard">Dashboard</a>
 
                     <!-- Academic Hub Dropdown -->
@@ -37,13 +38,16 @@
                             class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
                             Academic Hub
                         </button>
-
-                        <div
-                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                            <div
-                                class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
-                                <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Question Bank</a>
-                                <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Course Material</a>
+                        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
+                                <a href="{{ route('question.bank') }}"
+                                   class="px-4 py-2.5 text-sm {{ request()->routeIs('question.bank') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-blue-700 transition-colors whitespace-nowrap">
+                                   Question Bank
+                                </a>
+                                <a href="{{ route('course.material') }}"
+                                   class="px-4 py-2.5 text-sm {{ request()->routeIs('course.material') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-blue-700 transition-colors whitespace-nowrap">
+                                   Course Material
+                                </a>
                                 <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Class Links</a>
                                 <a href="/academic-calendar" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Academic Calendar</a>
                             </div>
@@ -56,11 +60,8 @@
                             class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
                             Planners
                         </button>
-
-                        <div
-                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                            <div
-                                class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
+                        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
                                 <a href="/course-planner" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Course Planner</a>
                                 <a href="/section-planner" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Section Planner</a>
                             </div>
@@ -73,19 +74,12 @@
                             class="{{ request()->is('calculator/*') ? 'text-blue-700 font-bold border-b-2 border-blue-500' : 'text-slate-500' }} font-medium hover:text-blue-700 transition-colors pb-1 flex items-center gap-1 cursor-pointer">
                             Calculator
                         </button>
-
-                        <div
-                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                            <div
-                                class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
-
-                                <!-- Updated: Link to the Tuition Fee Calculator route -->
+                        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
                                 <a href="{{ route('calculator.tuition') }}"
                                    class="px-4 py-2.5 text-sm {{ request()->routeIs('calculator.tuition') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">
                                    Tuition Fee Calculator
                                 </a>
-
-                                <!-- Link to the CGPA Calculator route -->
                                 <a href="{{ route('calculator.cgpa') }}"
                                     class="px-4 py-2.5 text-sm {{ request()->routeIs('calculator.cgpa') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">
                                     CGPA Calculator
@@ -94,10 +88,14 @@
                         </div>
                     </div>
 
+                    <!-- Community -->
                     <a class="{{ request()->is('community*') ? 'font-bold border-b-2 border-blue-500' : 'text-slate-500' }} font-medium hover:text-blue-700 transition-colors hover:border-b-2 hover:border-blue-500 pb-1"
                         href="{{ route('community') }}">Community</a>
+
                 </div>
             </div>
+
+            <!-- Auth Buttons RIGHT -->
             <div class="flex items-center gap-4">
                 @auth
                     <span class="text-sm font-medium text-gray-600">Hello, {{ Auth::user()->username }}</span>

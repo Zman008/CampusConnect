@@ -7,6 +7,7 @@ use App\Models\CommunityMessage;
 use App\Models\ExamRoutine;
 use App\Models\SectionRoutine;
 use App\Models\User;
+use App\Models\QuestionBankFile;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -26,6 +27,7 @@ class AdminController extends Controller
                 ->whereNotNull('reported_at')
                 ->latest('reported_at')
                 ->get(),
+            'questionBankFiles' => QuestionBankFile::with('user')->latest()->get(),
         ]);
     }
 
@@ -139,6 +141,15 @@ class AdminController extends Controller
         $user->forceFill(['banned_at' => null])->save();
 
         return redirect(route('admin.index') . '#reports')->with('success', "{$user->username} has been unbanned.");
+    }
+
+    public function deleteQuestionBankFile(QuestionBankFile $file)
+    {
+        $this->ensureAdmin();
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($file->file_path);
+        $file->delete();
+
+        return redirect(route('admin.index') . '#questionbank')->with('success', 'Question paper deleted.');
     }
 
     private function validateExamRoutine(Request $request, ?ExamRoutine $examRoutine = null): array

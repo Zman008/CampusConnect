@@ -8,6 +8,8 @@ use App\Http\Controllers\PlannerController;
 use App\Http\Controllers\AcademicCalendarController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\CourseMaterialController;
+use App\Http\Controllers\QuestionBankController;
 use Illuminate\Support\Facades\Route;
 
 // 1. Guest Routes
@@ -32,6 +34,7 @@ Route::patch('/admin/section-routines/{sectionRoutine}', [AdminController::class
 Route::delete('/admin/section-routines/{sectionRoutine}', [AdminController::class, 'deleteSectionRoutine'])->name('admin.section-routines.delete');
 Route::patch('/admin/users/{user}/ban', [AdminController::class, 'banUser'])->name('admin.users.ban');
 Route::patch('/admin/users/{user}/unban', [AdminController::class, 'unbanUser'])->name('admin.users.unban');
+Route::delete('/admin/question-bank/{file}', [AdminController::class, 'deleteQuestionBankFile'])->name('admin.questionbank.delete');
 
 // 2. Planner Routes (Teammate's Work)
 Route::get('/course-planner', [PlannerController::class, 'course'])->name('course.planner');
@@ -60,6 +63,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/tasks', [DashboardController::class, 'store'])->name('tasks.store');
     Route::patch('/tasks/{task}/toggle', [DashboardController::class, 'toggle'])->name('tasks.toggle');
     Route::delete('/tasks/{task}', [DashboardController::class, 'destroy'])->name('tasks.destroy');
+
+    // Question Bank
+    Route::get('/academic-hub/question-bank', [QuestionBankController::class, 'index'])->name('question.bank');
+    Route::post('/academic-hub/question-bank', [QuestionBankController::class, 'store'])->name('question.bank.store');
+    Route::get('/academic-hub/question-bank/{file}/download', [QuestionBankController::class, 'download'])->name('question.bank.download');
+    Route::delete('/academic-hub/question-bank/{file}', [QuestionBankController::class, 'destroy'])->name('question.bank.destroy');
+    
+    // Course Material Routes
+    Route::get('/academic-hub/course-material', [CourseMaterialController::class, 'index'])->name('course.material');
+    Route::post('/academic-hub/course-material', [CourseMaterialController::class, 'store'])->name('course.material.store');
+    Route::delete('/academic-hub/course-material/{courseMaterial}', [CourseMaterialController::class, 'destroy'])->name('course.material.destroy');
+    Route::get('/academic-hub/course-material/{courseMaterial}/download', [CourseMaterialController::class, 'download'])->name('course.material.download');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
