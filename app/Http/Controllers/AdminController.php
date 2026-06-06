@@ -28,6 +28,7 @@ class AdminController extends Controller
                 ->latest('reported_at')
                 ->get(),
             'questionBankFiles' => QuestionBankFile::with('user')->latest()->get(),
+            'courseMaterials' => \App\Models\CourseMaterial::with('user')->latest()->get(),
         ]);
     }
 

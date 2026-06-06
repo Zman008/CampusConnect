@@ -47,8 +47,8 @@ class CourseMaterialController extends Controller
             'file.max'             => '⚠️ File size must be less than 20MB.',
         ]);
 
-        $file   = $request->file('file');
-        $path   = $file->store('course-materials', 'public');
+        $file = $request->file('file');
+        $path = $file->store('course-materials', 'public');
 
         CourseMaterial::create([
             'user_id'     => Auth::id(),
@@ -66,12 +66,10 @@ class CourseMaterialController extends Controller
 
     public function destroy(CourseMaterial $courseMaterial)
     {
-        if ($courseMaterial->user_id !== Auth::id() && !(Auth::user()->is_admin ?? false)) {
-            abort(403);
-        }
+        abort_unless(session('is_admin'), 403);
         Storage::disk('public')->delete($courseMaterial->file_path);
         $courseMaterial->delete();
-        return redirect()->route('course.material')->with('success', '🗑️ Material deleted.');
+        return redirect()->back()->with('success', '🗑️ Material deleted.');
     }
 
     public function download(CourseMaterial $courseMaterial)
