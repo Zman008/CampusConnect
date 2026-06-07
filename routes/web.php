@@ -10,7 +10,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommunityController;
 use Illuminate\Support\Facades\Route;
 
-// 1. Guest Routes
+/*
+|--------------------------------------------------------------------------
+| 1. Guest Routes (Public)
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [HomepageController::class, 'index'])->name('homepage');
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
@@ -18,45 +22,65 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-// Admin Panel
+/*
+|--------------------------------------------------------------------------
+| 2. Admin Panel Routes (Management)
+|--------------------------------------------------------------------------
+*/
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 Route::post('/admin', [AdminController::class, 'login'])->name('admin.login');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+// Group & Reports
 Route::post('/admin/groups', [AdminController::class, 'storeGroup'])->name('admin.groups.store');
 Route::delete('/admin/groups/{group}', [AdminController::class, 'deleteGroup'])->name('admin.groups.delete');
+Route::patch('/admin/users/{user}/ban', [AdminController::class, 'banUser'])->name('admin.users.ban');
+Route::patch('/admin/users/{user}/unban', [AdminController::class, 'unbanUser'])->name('admin.users.unban');
+
+// Routine Management
 Route::post('/admin/exam-routines', [AdminController::class, 'storeExamRoutine'])->name('admin.exam-routines.store');
 Route::patch('/admin/exam-routines/{examRoutine}', [AdminController::class, 'updateExamRoutine'])->name('admin.exam-routines.update');
 Route::delete('/admin/exam-routines/{examRoutine}', [AdminController::class, 'deleteExamRoutine'])->name('admin.exam-routines.delete');
 Route::post('/admin/section-routines', [AdminController::class, 'storeSectionRoutine'])->name('admin.section-routines.store');
 Route::patch('/admin/section-routines/{sectionRoutine}', [AdminController::class, 'updateSectionRoutine'])->name('admin.section-routines.update');
 Route::delete('/admin/section-routines/{sectionRoutine}', [AdminController::class, 'deleteSectionRoutine'])->name('admin.section-routines.delete');
-Route::patch('/admin/users/{user}/ban', [AdminController::class, 'banUser'])->name('admin.users.ban');
-Route::patch('/admin/users/{user}/unban', [AdminController::class, 'unbanUser'])->name('admin.users.unban');
 
-// 2. Planner Routes (Teammate's Work)
+/**
+ * ADMIN: Class Link Management
+ * Route for admin to delete user-submitted links.
+ */
+Route::delete('/admin/class-links/{classLink}', [AdminController::class, 'deleteClassLink'])->name('admin.links.delete');
+
+/*
+|--------------------------------------------------------------------------
+| 3. Shared Resources (Planner & Calendar)
+|--------------------------------------------------------------------------
+*/
 Route::get('/course-planner', [PlannerController::class, 'course'])->name('course.planner');
 Route::get('/section-planner', [PlannerController::class, 'section'])->name('section.planner');
-
 Route::get('/academic-calendar', [AcademicCalendarController::class, 'index'])->name('academic.calendar');
 
-
-// 3. Protected Routes (Requires Login)
+/*
+|--------------------------------------------------------------------------
+| 4. Protected Routes (Requires Authentication)
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard main page
+    // Main Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    /**
+     * ACADEMIC HUB: Class Links & Submissions
+     */
+    Route::get('/academic-hub/class-links', [DashboardController::class, 'classLinks'])->name('class.links');
+    Route::post('/academic-hub/class-links', [DashboardController::class, 'storeClassLink'])->name('class.links.store');
 
     // Calculator Routes
     Route::get('/calculator/cgpa', [DashboardController::class, 'cgpaCalculator'])->name('calculator.cgpa');
-
-    /*
-    |--------------------------------------------------------------------------
-    | NEW: Tuition Fee Calculator Route
-    |--------------------------------------------------------------------------
-    */
     Route::get('/calculator/tuition', [DashboardController::class, 'tuitionCalculator'])->name('calculator.tuition');
 
-    // To-do list (Add, Toggle, Delete)
+    // To-do list Actions
     Route::post('/tasks', [DashboardController::class, 'store'])->name('tasks.store');
     Route::patch('/tasks/{task}/toggle', [DashboardController::class, 'toggle'])->name('tasks.toggle');
     Route::delete('/tasks/{task}', [DashboardController::class, 'destroy'])->name('tasks.destroy');
@@ -64,14 +88,14 @@ Route::middleware(['auth'])->group(function () {
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    // Community Routes
+    // Community & Chat
     Route::get('/community', [CommunityController::class, 'index'])->name('community');
     Route::get('/community/group/{groupId}', [CommunityController::class, 'showGroup'])->name('community.group');
     Route::post('/community/group/{groupId}/message', [CommunityController::class, 'sendMessage'])->name('community.message.send');
     Route::post('/community/group/{groupId}/message/{message}/report', [CommunityController::class, 'reportMessage'])->name('community.message.report');
     Route::get('/community/group/{groupId}/messages', [CommunityController::class, 'getMessages'])->name('community.messages.get');
 
-    // Planner Save Routes
+    // Planner Saving
     Route::post('/course-planner/save', [PlannerController::class, 'saveCourseRoutine'])->name('course.planner.save');
     Route::post('/section-planner/save', [PlannerController::class, 'saveSectionRoutine'])->name('section.planner.save');
 });
