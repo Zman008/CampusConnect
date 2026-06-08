@@ -52,7 +52,6 @@
                             @csrf
                             <div class="space-y-4">
                                 <input type="text" name="title" placeholder="What needs to be done?" class="w-full bg-transparent border-b-2 md:border-b-4 border-slate-200 focus:border-blue-600 p-2 font-[900] text-xl md:text-3xl outline-none text-slate-800 placeholder:text-slate-300" required>
-                                <input type="text" name="description" placeholder="Add task details (Optional)..." class="w-full bg-transparent border-none p-2 font-bold text-base md:text-lg text-slate-500 outline-none">
                             </div>
                             
                             <div class="flex flex-col md:flex-row gap-6 items-center md:items-end">
