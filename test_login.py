@@ -23,7 +23,7 @@ def run_login_tests():
         password_input = driver.find_element(By.ID, "password")
         login_button = driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
         
-        # Act: Enter valid credentials
+        # Enter valid credentials
         email_input.send_keys("nahid@mail.com")
         time.sleep(1)  
         password_input.send_keys("1234")
@@ -39,22 +39,20 @@ def run_login_tests():
         
         # ---- TEST CASE 2: Failed Login ----
         print("\nRunning Test Case 2: Invalid Login...")
-        # Log out or navigate back to the login page
         driver.get(target_url)
         
-        # Re-locate elements since the page refreshed
         email_input = wait.until(EC.element_to_be_clickable((By.ID, "email")))
         password_input = driver.find_element(By.ID, "password")
         login_button = driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
         
-        # Act: Enter invalid credentials
+        # Enter invalid credentials
         time.sleep(1)
         email_input.send_keys("wrong_user@mail.com")
         time.sleep(1)
         password_input.send_keys("wrong_password")
         time.sleep(1)
         login_button.click()
-        time.sleep(1)
+        time.sleep(2)
         
         
     except AssertionError as msg:
@@ -63,7 +61,6 @@ def run_login_tests():
         print(f"✗ Unexpected Error: {e}")
         
     finally:
-        # Always safe-close the browser window
         print("\nClosing browser environment.")
         driver.quit()
 
