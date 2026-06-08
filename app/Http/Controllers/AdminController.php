@@ -8,6 +8,7 @@ use App\Models\ExamRoutine;
 use App\Models\SectionRoutine;
 use App\Models\ClassLink; // Essential model for University Class Links
 use App\Models\User;
+use App\Models\QuestionBankFile;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -38,6 +39,8 @@ class AdminController extends Controller
                 ->whereNotNull('reported_at')
                 ->latest('reported_at')
                 ->get(),
+            'questionBankFiles' => QuestionBankFile::with('user')->latest()->get(),
+            'courseMaterials' => \App\Models\CourseMaterial::with('user')->latest()->get(),
         ]);
     }
 
@@ -178,6 +181,15 @@ class AdminController extends Controller
         $this->ensureAdmin();
         $sectionRoutine->delete();
         return redirect(route('admin.index') . '#section')->with('success', 'Section routine deleted.');
+    }
+
+    public function deleteQuestionBankFile(QuestionBankFile $file)
+    {
+        $this->ensureAdmin();
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($file->file_path);
+        $file->delete();
+
+        return redirect(route('admin.index') . '#questionbank')->with('success', 'Question paper deleted.');
     }
 
     /* 
