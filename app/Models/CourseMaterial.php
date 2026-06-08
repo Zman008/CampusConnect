@@ -15,6 +15,7 @@ class CourseMaterial extends Model
         'file_path',
         'file_name',
         'file_size',
+        'status',
     ];
 
     public function user()
@@ -22,22 +23,11 @@ class CourseMaterial extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getFileSizeFormattedAttribute()
+    public function getFileSizeFormattedAttribute(): string
     {
         $bytes = $this->file_size;
-        if ($bytes < 1024)    return $bytes . ' B';
-        if ($bytes < 1048576) return round($bytes / 1024, 1) . ' KB';
-        return round($bytes / 1048576, 1) . ' MB';
-    }
-
-    public function getTypeIconAttribute()
-    {
-        return match($this->type) {
-            'pdf'        => '📄',
-            'slides'     => '📊',
-            'assignment' => '📝',
-            'book'       => '📗',
-            default      => '📁',
-        };
+        if ($bytes >= 1048576) return round($bytes / 1048576, 1) . ' MB';
+        if ($bytes >= 1024)    return round($bytes / 1024, 1) . ' KB';
+        return $bytes . ' B';
     }
 }

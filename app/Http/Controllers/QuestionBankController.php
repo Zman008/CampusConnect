@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
-class QuestionBankController
+use App\Models\QuestionBankFile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class QuestionBankController extends Controller
 {
     public function index()
     {
-        $uploads = \App\Models\QuestionBankFile::with('user')
-                    ->latest()
-                    ->get();
+        // Students only see APPROVED files
+        $uploads = QuestionBankFile::with('user')
+            ->where('status', 'approved')
+            ->latest()
+            ->get();
 
         return view('questionBank', compact('uploads'));
     }
 
-    public function store(\Illuminate\Http\Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'course_code' => 'required|string|max:20',
@@ -25,7 +31,7 @@ class QuestionBankController
 
         $path = $request->file('file')->store('question-bank', 'public');
 
-        \App\Models\QuestionBankFile::create([
+        QuestionBankFile::create([
             'user_id'       => auth()->id(),
             'course_code'   => $request->course_code,
             'course_name'   => $request->course_name,
@@ -33,22 +39,23 @@ class QuestionBankController
             'term'          => $request->term,
             'file_path'     => $path,
             'original_name' => $request->file('file')->getClientOriginalName(),
+            'status'        => 'pending', // always pending on upload
         ]);
 
-        return back()->with('success', 'Question paper uploaded successfully!');
+        return back()->with('success', 'Question paper uploaded! Waiting for admin approval.');
     }
 
-    public function download(\App\Models\QuestionBankFile $file)
+    public function download(QuestionBankFile $file)
     {
-        return \Illuminate\Support\Facades\Storage::disk('public')->download(
+        return Storage::disk('public')->download(
             $file->file_path,
             $file->original_name
         );
     }
 
-    public function destroy(\App\Models\QuestionBankFile $file)
+    public function destroy(QuestionBankFile $file)
     {
-        \Illuminate\Support\Facades\Storage::disk('public')->delete($file->file_path);
+        Storage::disk('public')->delete($file->file_path);
         $file->delete();
 
         return back()->with('success', 'Question paper deleted successfully!');

@@ -27,6 +27,24 @@
             </div>
             @endif
 
+            {{-- My Pending Uploads Notice --}}
+            @php
+                $myPending = \App\Models\QuestionBankFile::where('user_id', auth()->id())
+                    ->where('status', 'pending')->get();
+            @endphp
+            @if($myPending->count() > 0)
+            <div class="bg-yellow-50 border border-yellow-300 rounded-2xl px-5 py-4 mb-6">
+                <p class="text-yellow-800 font-bold text-sm mb-2">
+                    ⏳ You have {{ $myPending->count() }} upload(s) waiting for admin approval:
+                </p>
+                <ul class="list-disc list-inside text-yellow-700 text-xs space-y-1">
+                    @foreach($myPending as $p)
+                        <li>{{ $p->course_code }} – {{ $p->course_name }} ({{ $p->term === 'mid' ? 'Mid Term' : 'Final Exam' }}, Semester {{ $p->semester }})</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             {{-- Upload Section --}}
             <div class="bg-white border border-gray-200 rounded-2xl p-6 mb-8 shadow-sm">
                 <div class="flex items-center gap-3 mb-5">
@@ -96,7 +114,7 @@
                 </div>
             </div>
 
-            {{-- Uploaded Questions grouped by Semester --}}
+            {{-- Approved uploads grouped by Semester --}}
             @if($uploads->count() > 0)
 
                 {{-- Search --}}

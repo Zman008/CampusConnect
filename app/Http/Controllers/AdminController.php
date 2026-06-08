@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CommunityGroup;
 use App\Models\CommunityMessage;
+use App\Models\CourseMaterial;
 use App\Models\ExamRoutine;
 use App\Models\SectionRoutine;
 use App\Models\User;
@@ -28,7 +29,7 @@ class AdminController extends Controller
                 ->latest('reported_at')
                 ->get(),
             'questionBankFiles' => QuestionBankFile::with('user')->latest()->get(),
-            'courseMaterials' => \App\Models\CourseMaterial::with('user')->latest()->get(),
+            'courseMaterials' => CourseMaterial::with('user')->latest()->get(),
         ]);
     }
 
@@ -151,6 +152,51 @@ class AdminController extends Controller
         $file->delete();
 
         return redirect(route('admin.index') . '#questionbank')->with('success', 'Question paper deleted.');
+    }
+
+    public function approveQuestionBankFile(QuestionBankFile $file)
+    {
+        $this->ensureAdmin();
+        $file->update(['status' => 'approved']);
+
+        return redirect(route('admin.index') . '#questionbank')->with('success', 'Question paper approved.');
+    }
+
+    public function downloadQuestionBankFile(QuestionBankFile $file)
+    {
+        $this->ensureAdmin();
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->download(
+            $file->file_path,
+            $file->original_name
+        );
+    }
+
+    public function downloadCourseMaterial(CourseMaterial $courseMaterial)
+    {
+        $this->ensureAdmin();
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->download(
+            $courseMaterial->file_path,
+            $courseMaterial->file_name
+        );
+    }
+
+    public function approveCourseMaterial(CourseMaterial $courseMaterial)
+    {
+        $this->ensureAdmin();
+        $courseMaterial->update(['status' => 'approved']);
+
+        return redirect(route('admin.index') . '#coursematerial')->with('success', 'Course material approved.');
+    }
+
+    public function deleteCourseMaterial(CourseMaterial $courseMaterial)
+    {
+        $this->ensureAdmin();
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($courseMaterial->file_path);
+        $courseMaterial->delete();
+
+        return redirect(route('admin.index') . '#coursematerial')->with('success', 'Course material deleted.');
     }
 
     private function validateExamRoutine(Request $request, ?ExamRoutine $examRoutine = null): array

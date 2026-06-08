@@ -45,13 +45,19 @@
                 </button>
                 <button type="button" class="admin-tab rounded-lg px-4 py-2.5 text-sm font-bold transition-colors text-slate-600 hover:bg-slate-100" data-tab-target="questionbank">
                     Question Bank
-                    @if ($questionBankFiles->count())
+                    @php $pendingQB = $questionBankFiles->where('status','pending')->count(); @endphp
+                    @if ($pendingQB > 0)
+                        <span class="ml-2 rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700">{{ $pendingQB }} pending</span>
+                    @elseif($questionBankFiles->count())
                         <span class="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">{{ $questionBankFiles->count() }}</span>
                     @endif
                 </button>
                 <button type="button" class="admin-tab rounded-lg px-4 py-2.5 text-sm font-bold transition-colors text-slate-600 hover:bg-slate-100" data-tab-target="coursematerial">
                     Course Material
-                    @if ($courseMaterials->count())
+                    @php $pendingCM = $courseMaterials->where('status','pending')->count(); @endphp
+                    @if ($pendingCM > 0)
+                        <span class="ml-2 rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-700">{{ $pendingCM }} pending</span>
+                    @elseif($courseMaterials->count())
                         <span class="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">{{ $courseMaterials->count() }}</span>
                     @endif
                 </button>
@@ -163,27 +169,88 @@
 
             {{-- Question Bank Section --}}
             <section id="admin-tab-questionbank" class="admin-panel hidden bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
-                <h2 class="text-2xl font-black text-[#003366] mb-4">Question Bank</h2>
+                <h2 class="text-2xl font-black text-[#003366] mb-4">
+                    Question Bank
+                    @php $pendingQBCount = $questionBankFiles->where('status','pending')->count(); @endphp
+                    @if($pendingQBCount > 0)
+                        <span class="ml-2 rounded-full bg-red-500 text-white text-xs font-bold px-2.5 py-0.5">{{ $pendingQBCount }} pending</span>
+                    @endif
+                </h2>
+
                 @if($questionBankFiles->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-                    @foreach($questionBankFiles as $file)
-                    <div class="border border-slate-200 rounded-lg p-4">
-                        <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <span class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">{{ $file->course_code }}</span>
-                                <h3 class="font-black text-slate-900">{{ $file->course_name }}</h3>
-                                <p class="text-xs text-slate-500 mt-1">Semester {{ $file->semester }} • {{ $file->term === 'mid' ? 'Mid Term' : 'Final Exam' }}</p>
-                                <p class="text-xs text-slate-400 mt-1">Uploaded by {{ $file->user->username ?? 'Unknown' }}</p>
+
+                    {{-- PENDING FILES --}}
+                    @php $pendingFiles = $questionBankFiles->where('status','pending'); @endphp
+                    @if($pendingFiles->count() > 0)
+                        <h3 class="font-bold text-red-600 text-sm mb-3">⏳ Pending Approval</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mb-6">
+                            @foreach($pendingFiles as $file)
+                            <div class="border-2 border-yellow-300 bg-yellow-50 rounded-lg p-4">
+                                <div class="mb-3">
+                                    <span class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">{{ $file->course_code }}</span>
+                                    <h3 class="font-black text-slate-900">{{ $file->course_name }}</h3>
+                                    <p class="text-xs text-slate-500 mt-1">Semester {{ $file->semester }} • {{ $file->term === 'mid' ? 'Mid Term' : 'Final Exam' }}</p>
+                                    <p class="text-xs text-slate-400 mt-1">Uploaded by {{ $file->user->username ?? 'Unknown' }}</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="{{ route('admin.questionbank.download', $file) }}"
+                                       class="rounded-lg bg-[#003366] px-3 py-2 text-xs font-bold text-white hover:bg-blue-900">
+                                        ⬇️ Download
+                                    </a>
+                                    <form method="POST" action="{{ route('admin.questionbank.approve', $file) }}">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit"
+                                            class="rounded-lg bg-green-600 px-3 py-2 text-xs font-bold text-white hover:bg-green-700">
+                                            ✅ Approve
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ route('admin.questionbank.delete', $file) }}" onsubmit="return confirm('Delete this question paper?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                            <form method="POST" action="{{ route('admin.questionbank.delete', $file) }}" onsubmit="return confirm('Delete this question paper?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="rounded-lg border border-red-200 px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-50">Delete</button>
-                            </form>
+                            @endforeach
                         </div>
-                    </div>
-                    @endforeach
-                </div>
+                    @endif
+
+                    {{-- APPROVED FILES --}}
+                    @php $approvedFiles = $questionBankFiles->where('status','approved'); @endphp
+                    @if($approvedFiles->count() > 0)
+                        <h3 class="font-bold text-green-600 text-sm mb-3">✅ Approved</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                            @foreach($approvedFiles as $file)
+                            <div class="border border-slate-200 rounded-lg p-4">
+                                <div class="mb-3">
+                                    <span class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">{{ $file->course_code }}</span>
+                                    <h3 class="font-black text-slate-900">{{ $file->course_name }}</h3>
+                                    <p class="text-xs text-slate-500 mt-1">Semester {{ $file->semester }} • {{ $file->term === 'mid' ? 'Mid Term' : 'Final Exam' }}</p>
+                                    <p class="text-xs text-slate-400 mt-1">Uploaded by {{ $file->user->username ?? 'Unknown' }}</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="{{ route('admin.questionbank.download', $file) }}"
+                                       class="rounded-lg bg-[#003366] px-3 py-2 text-xs font-bold text-white hover:bg-blue-900">
+                                        ⬇️ Download
+                                    </a>
+                                    <form method="POST" action="{{ route('admin.questionbank.delete', $file) }}" onsubmit="return confirm('Delete this question paper?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    @endif
+
                 @else
                     <p class="text-slate-500">No question papers uploaded yet.</p>
                 @endif
@@ -191,27 +258,91 @@
 
             {{-- Course Material Section --}}
             <section id="admin-tab-coursematerial" class="admin-panel hidden bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
-                <h2 class="text-2xl font-black text-[#003366] mb-4">Course Material</h2>
+                <h2 class="text-2xl font-black text-[#003366] mb-4">
+                    Course Material
+                    @php $pendingCMCount = $courseMaterials->where('status','pending')->count(); @endphp
+                    @if($pendingCMCount > 0)
+                        <span class="ml-2 rounded-full bg-red-500 text-white text-xs font-bold px-2.5 py-0.5">{{ $pendingCMCount }} pending</span>
+                    @endif
+                </h2>
+
                 @if($courseMaterials->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-                    @foreach($courseMaterials as $material)
-                    <div class="border border-slate-200 rounded-lg p-4">
-                        <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <span class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">{{ $material->course_code }}</span>
-                                <h3 class="font-black text-slate-900">{{ $material->title }}</h3>
-                                <p class="text-xs text-slate-500 mt-1">{{ $material->course_name }} • {{ ucfirst($material->type) }}</p>
-                                <p class="text-xs text-slate-400 mt-1">Uploaded by {{ $material->user->name ?? 'Unknown' }}</p>
+
+                    {{-- PENDING MATERIALS --}}
+                    @php $pendingMaterials = $courseMaterials->where('status','pending'); @endphp
+                    @if($pendingMaterials->count() > 0)
+                        <h3 class="font-bold text-red-600 text-sm mb-3">⏳ Pending Approval</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mb-6">
+                            @foreach($pendingMaterials as $material)
+                            <div class="border-2 border-yellow-300 bg-yellow-50 rounded-lg p-4">
+                                <div class="mb-3">
+                                    <span class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">{{ $material->course_code }}</span>
+                                    <h3 class="font-black text-slate-900">{{ $material->title }}</h3>
+                                    <p class="text-xs text-slate-500 mt-1">{{ $material->course_name }} • {{ ucfirst($material->type) }}</p>
+                                    <p class="text-xs text-slate-400 mt-1">Uploaded by {{ $material->user->name ?? $material->user->username ?? 'Unknown' }}</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    {{-- Download to verify --}}
+                                    <a href="{{ route('admin.coursematerial.download', $material) }}"
+                                       class="rounded-lg bg-[#003366] px-3 py-2 text-xs font-bold text-white hover:bg-blue-900">
+                                        ⬇️ Download
+                                    </a>
+                                    {{-- Approve --}}
+                                    <form method="POST" action="{{ route('admin.coursematerial.approve', $material) }}">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit"
+                                            class="rounded-lg bg-green-600 px-3 py-2 text-xs font-bold text-white hover:bg-green-700">
+                                            ✅ Approve
+                                        </button>
+                                    </form>
+                                    {{-- Delete --}}
+                                    <form method="POST" action="{{ route('admin.coursematerial.delete', $material) }}" onsubmit="return confirm('Delete this material?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                            <form method="POST" action="{{ route('course.material.destroy', $material) }}" onsubmit="return confirm('Delete this material?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="rounded-lg border border-red-200 px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-50">Delete</button>
-                            </form>
+                            @endforeach
                         </div>
-                    </div>
-                    @endforeach
-                </div>
+                    @endif
+
+                    {{-- APPROVED MATERIALS --}}
+                    @php $approvedMaterials = $courseMaterials->where('status','approved'); @endphp
+                    @if($approvedMaterials->count() > 0)
+                        <h3 class="font-bold text-green-600 text-sm mb-3">✅ Approved</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                            @foreach($approvedMaterials as $material)
+                            <div class="border border-slate-200 rounded-lg p-4">
+                                <div class="mb-3">
+                                    <span class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">{{ $material->course_code }}</span>
+                                    <h3 class="font-black text-slate-900">{{ $material->title }}</h3>
+                                    <p class="text-xs text-slate-500 mt-1">{{ $material->course_name }} • {{ ucfirst($material->type) }}</p>
+                                    <p class="text-xs text-slate-400 mt-1">Uploaded by {{ $material->user->name ?? $material->user->username ?? 'Unknown' }}</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="{{ route('admin.coursematerial.download', $material) }}"
+                                       class="rounded-lg bg-[#003366] px-3 py-2 text-xs font-bold text-white hover:bg-blue-900">
+                                        ⬇️ Download
+                                    </a>
+                                    <form method="POST" action="{{ route('admin.coursematerial.delete', $material) }}" onsubmit="return confirm('Delete this material?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="rounded-lg border border-red-200 px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    @endif
+
                 @else
                     <p class="text-slate-500">No course materials uploaded yet.</p>
                 @endif
