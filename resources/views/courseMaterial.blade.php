@@ -75,7 +75,6 @@
                     <form action="{{ route('course.material.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
-
                             <div class="flex flex-col gap-1">
                                 <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Course Code *</label>
                                 <input type="text" name="course_code" placeholder="e.g. CSE2111"
@@ -120,7 +119,6 @@
                                 <p class="text-xs text-gray-400 mt-1">Allowed: PDF, PPT, PPTX, DOC, DOCX — Max 20MB</p>
                                 @error('file')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                             </div>
-
                         </div>
                         <button type="submit"
                                 class="mt-5 inline-flex items-center gap-2 px-6 py-3 bg-[#003366] hover:bg-blue-900 text-white font-bold text-sm rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-lg">
@@ -158,7 +156,6 @@
                 @foreach($grouped as $courseCode => $typeGroups)
                     @php $courseName = $typeGroups->flatten()->first()->course_name; @endphp
                     <div class="mb-8">
-                        {{-- Course header --}}
                         <div class="flex items-center gap-3 mb-4 pb-3 border-b-2 border-gray-200">
                             <span class="bg-[#003366] text-white text-xs font-bold px-3 py-1.5 rounded-lg">{{ $courseCode }}</span>
                             <span class="font-bold text-gray-800">{{ $courseName }}</span>
@@ -192,16 +189,6 @@
                                                     <span class="material-symbols-outlined text-sm">download</span>
                                                     Download
                                                 </a>
-                                                @if(Auth::id() === $material->user_id || (Auth::user()->is_admin ?? false))
-                                                <form action="{{ route('course.material.destroy', $material) }}" method="POST"
-                                                      onsubmit="return confirm('Delete this material?')">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit"
-                                                            class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-50 text-red-500 border border-red-100 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">
-                                                        <span class="material-symbols-outlined text-sm">delete</span>
-                                                    </button>
-                                                </form>
-                                                @endif
                                             </div>
                                         </div>
                                         @endforeach
@@ -225,7 +212,6 @@
             chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
         }
 
-        // Auto open if there are validation errors
         @if($errors->any())
             document.addEventListener('DOMContentLoaded', () => toggleUpload());
         @endif

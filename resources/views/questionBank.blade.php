@@ -150,15 +150,6 @@
                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#003366] text-white rounded-lg text-xs font-semibold hover:bg-blue-900 transition-colors">
                                     ⬇️ Download
                                 </a>
-                                <form method="POST" action="{{ route('question.bank.destroy', $file) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        onclick="return confirm('Delete this question paper?')"
-                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 border border-red-100 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">
-                                        🗑️ Delete
-                                    </button>
-                                </form>
                             </div>
                         </div>
                         @endforeach

@@ -43,6 +43,18 @@
                 <button type="button" class="admin-tab rounded-lg px-4 py-2.5 text-sm font-bold transition-colors text-slate-600 hover:bg-slate-100" data-tab-target="section">
                     Section Routine
                 </button>
+                <button type="button" class="admin-tab rounded-lg px-4 py-2.5 text-sm font-bold transition-colors text-slate-600 hover:bg-slate-100" data-tab-target="questionbank">
+                    Question Bank
+                    @if ($questionBankFiles->count())
+                        <span class="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">{{ $questionBankFiles->count() }}</span>
+                    @endif
+                </button>
+                <button type="button" class="admin-tab rounded-lg px-4 py-2.5 text-sm font-bold transition-colors text-slate-600 hover:bg-slate-100" data-tab-target="coursematerial">
+                    Course Material
+                    @if ($courseMaterials->count())
+                        <span class="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">{{ $courseMaterials->count() }}</span>
+                    @endif
+                </button>
                 <button type="button" class="admin-tab rounded-lg px-4 py-2.5 text-sm font-bold transition-colors text-slate-600 hover:bg-slate-100" data-tab-target="reports">
                     Reports
                     @if ($reportedMessages->count())
@@ -59,7 +71,6 @@
                     <input name="description" placeholder="Description" required class="rounded-lg border border-slate-300 px-4 py-3">
                     <button class="rounded-lg bg-blue-700 px-5 py-3 font-bold text-white hover:bg-blue-800">Create</button>
                 </form>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                     @forelse ($groups as $group)
                         <div class="border border-slate-200 rounded-lg p-4">
@@ -92,7 +103,6 @@
                     <input name="time_slot" type="number" min="1" placeholder="Slot" required class="rounded-lg border border-slate-300 px-3 py-2">
                     <button class="rounded-lg bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800">Add</button>
                 </form>
-
                 <div class="space-y-3">
                     @foreach ($examRoutines as $routine)
                         <form method="POST" action="{{ route('admin.exam-routines.update', $routine) }}" class="grid grid-cols-1 md:grid-cols-[1fr_2fr_90px_90px_auto_auto] gap-3 border border-slate-200 rounded-lg p-3">
@@ -127,7 +137,6 @@
                     <input name="faculty_name" placeholder="Faculty" required class="rounded-lg border border-slate-300 px-3 py-2">
                     <button class="rounded-lg bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800">Add</button>
                 </form>
-
                 <div class="space-y-3">
                     @foreach ($sectionRoutines as $routine)
                         <form method="POST" action="{{ route('admin.section-routines.update', $routine) }}" class="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-[100px_80px_2fr_50px_120px_150px_150px_1fr_auto] gap-3 border border-slate-200 rounded-lg p-3">
@@ -150,6 +159,62 @@
                         </form>
                     @endforeach
                 </div>
+            </section>
+
+            {{-- Question Bank Section --}}
+            <section id="admin-tab-questionbank" class="admin-panel hidden bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                <h2 class="text-2xl font-black text-[#003366] mb-4">Question Bank</h2>
+                @if($questionBankFiles->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                    @foreach($questionBankFiles as $file)
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">{{ $file->course_code }}</span>
+                                <h3 class="font-black text-slate-900">{{ $file->course_name }}</h3>
+                                <p class="text-xs text-slate-500 mt-1">Semester {{ $file->semester }} • {{ $file->term === 'mid' ? 'Mid Term' : 'Final Exam' }}</p>
+                                <p class="text-xs text-slate-400 mt-1">Uploaded by {{ $file->user->username ?? 'Unknown' }}</p>
+                            </div>
+                            <form method="POST" action="{{ route('admin.questionbank.delete', $file) }}" onsubmit="return confirm('Delete this question paper?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="rounded-lg border border-red-200 px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-50">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                    <p class="text-slate-500">No question papers uploaded yet.</p>
+                @endif
+            </section>
+
+            {{-- Course Material Section --}}
+            <section id="admin-tab-coursematerial" class="admin-panel hidden bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+                <h2 class="text-2xl font-black text-[#003366] mb-4">Course Material</h2>
+                @if($courseMaterials->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                    @foreach($courseMaterials as $material)
+                    <div class="border border-slate-200 rounded-lg p-4">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="inline-block bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg mb-2">{{ $material->course_code }}</span>
+                                <h3 class="font-black text-slate-900">{{ $material->title }}</h3>
+                                <p class="text-xs text-slate-500 mt-1">{{ $material->course_name }} • {{ ucfirst($material->type) }}</p>
+                                <p class="text-xs text-slate-400 mt-1">Uploaded by {{ $material->user->name ?? 'Unknown' }}</p>
+                            </div>
+                            <form method="POST" action="{{ route('course.material.destroy', $material) }}" onsubmit="return confirm('Delete this material?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="rounded-lg border border-red-200 px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-50">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                    <p class="text-slate-500">No course materials uploaded yet.</p>
+                @endif
             </section>
 
             <section id="admin-tab-reports" class="admin-panel hidden bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
@@ -182,6 +247,7 @@
                     @endforelse
                 </div>
             </section>
+
         </div>
     </main>
     <script>
@@ -209,7 +275,7 @@
         });
 
         const initialTab = window.location.hash.replace('#', '');
-        if (['groups', 'exam', 'section', 'reports'].includes(initialTab)) {
+        if (['groups', 'exam', 'section', 'questionbank', 'coursematerial', 'reports'].includes(initialTab)) {
             activateAdminTab(initialTab);
         }
     </script>
