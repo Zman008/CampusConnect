@@ -4,58 +4,51 @@ namespace App\Services;
 
 class CgpaService
 {
-    /**
-     * Calculate Trimester GPA and Final CGPA based on UIU Retake Logic.
-     */
     public function calculate(float $prevCredits, float $prevCgpa, array $newCourses, array $retakeCourses): array
     {
-        $totalPointsAccumulated = $prevCredits * $prevCgpa;
-        $trimesterPoints = 0;
-        $trimesterCredits = 0;
-        $netNewCredits = 0;
-        $retakePointDifference = 0;
+        $oldTotalPoints = $prevCredits * $prevCgpa;
+        
+        $currentTriPoints = 0;
+        $currentTriCredits = 0;
+        
+        $newCreditsOnly = 0;
+        $retakePointsAdjustment = 0;
 
-        // Process New Courses
+        // 1. Process Fresh Courses
         foreach ($newCourses as $course) {
             $cr = $course['credits'] ?? 0;
-            $gr = $course['grade_point'] ?? 0;
-            $trimesterPoints += ($cr * $gr);
-            $trimesterCredits += $cr;
-            $netNewCredits += $cr;
+            $gp = $course['grade_point'] ?? 0;
+            
+            $currentTriPoints += ($cr * $gp);
+            $currentTriCredits += $cr;
+            $newCreditsOnly += $cr;
         }
 
-        // Process Retake Courses
+        // 2. Process Retake Courses
         foreach ($retakeCourses as $course) {
             $cr = $course['credits'] ?? 0;
-            $oldG = $course['old_grade_point'] ?? 0;
-            $newG = $course['new_grade_point'] ?? 0;
+            $oldGp = $course['old_grade_point'] ?? 0;
+            $newGp = $course['new_grade_point'] ?? 0;
 
-            $trimesterPoints += ($cr * $newG);
-            $trimesterCredits += $cr;
+            $currentTriPoints += ($cr * $newGp);
+            $currentTriCredits += $cr;
             
-            // Logic: Subtract old points from history and add new points
-            $retakePointDifference += ($cr * ($newG - $oldG));
+            // Logic: Subtract old points and prepare to add new points
+            $retakePointsAdjustment -= ($cr * $oldGp);
         }
 
-        // Calculation Formulas
-        $tgpa = $trimesterCredits > 0 ? ($trimesterPoints / $trimesterCredits) : 0;
-        $finalTotalCredits = $prevCredits + $netNewCredits;
+        // 3. Final Formulas
+        $tgpa = $currentTriCredits > 0 ? ($currentTriPoints / $currentTriCredits) : 0;
         
-        $finalCgpa = $finalTotalCredits > 0 
-            ? ($totalPointsAccumulated + ($trimesterPoints - ($trimesterCredits - $netNewCredits) * 0) + ($retakePointDifference - ($trimesterPoints - ($trimesterPoints - $retakePointDifference)))) / $finalTotalCredits
-            : 0;
+        $finalTotalCredits = $prevCredits + $newCreditsOnly;
+        $finalTotalPoints = $oldTotalPoints + $retakePointsAdjustment + $currentTriPoints;
+        
+        $finalCgpa = $finalTotalCredits > 0 ? ($finalTotalPoints / $finalTotalCredits) : 0;
 
-        // Simplified Result for Unit Test purposes
-        $finalCgpa = $finalTotalCredits > 0 
-            ? ($totalPointsAccumulated + ($trimesterPoints - ($trimesterCredits - $netNewCredits) * 0) + $retakePointDifference - ($trimesterPoints - ($trimesterPoints - $retakePointDifference))) / $finalTotalCredits
-            : 0;
-            
-        // Final CGPA = (Old Total Points + Net Gain) / Final Total Credits
-        $finalCgpa = $finalTotalCredits > 0 ? ($totalPointsAccumulated + ($trimesterPoints - ($trimesterCredits - $netNewCredits) * 0) + $retakePointDifference) / $finalTotalCredits : 0;
-
+        // Using round with PHP_ROUND_HALF_UP to be consistent with standard grading
         return [
-            'tgpa' => round($tgpa, 2),
-            'final_cgpa' => round($finalCgpa, 2),
+            'tgpa' => round($tgpa, 2, PHP_ROUND_HALF_UP),
+            'final_cgpa' => round($finalCgpa, 2, PHP_ROUND_HALF_UP),
             'total_credits' => $finalTotalCredits
         ];
     }
