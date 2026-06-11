@@ -46,7 +46,16 @@ Route::delete('/admin/exam-routines/{examRoutine}', [AdminController::class, 'de
 Route::post('/admin/section-routines', [AdminController::class, 'storeSectionRoutine'])->name('admin.section-routines.store');
 Route::patch('/admin/section-routines/{sectionRoutine}', [AdminController::class, 'updateSectionRoutine'])->name('admin.section-routines.update');
 Route::delete('/admin/section-routines/{sectionRoutine}', [AdminController::class, 'deleteSectionRoutine'])->name('admin.section-routines.delete');
+
+// Question Bank Admin Routes
 Route::delete('/admin/question-bank/{file}', [AdminController::class, 'deleteQuestionBankFile'])->name('admin.questionbank.delete');
+Route::patch('/admin/question-bank/{file}/approve', [AdminController::class, 'approveQuestionBankFile'])->name('admin.questionbank.approve');
+Route::get('/admin/question-bank/{file}/download', [AdminController::class, 'downloadQuestionBankFile'])->name('admin.questionbank.download');
+
+// Course Material Admin Routes
+Route::get('/admin/course-materials/{courseMaterial}/download', [AdminController::class, 'downloadCourseMaterial'])->name('admin.coursematerial.download');
+Route::patch('/admin/course-materials/{courseMaterial}/approve', [AdminController::class, 'approveCourseMaterial'])->name('admin.coursematerial.approve');
+Route::delete('/admin/course-materials/{courseMaterial}', [AdminController::class, 'deleteCourseMaterial'])->name('admin.coursematerial.delete');
 
 /**
  * ADMIN: Class Link Management
@@ -68,6 +77,7 @@ Route::get('/academic-calendar', [AcademicCalendarController::class, 'index'])->
 | 4. Protected Routes (Requires Authentication)
 |--------------------------------------------------------------------------
 */
+
 Route::middleware(['auth'])->group(function () {
 
     // Main Dashboard
@@ -93,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/academic-hub/question-bank', [QuestionBankController::class, 'store'])->name('question.bank.store');
     Route::get('/academic-hub/question-bank/{file}/download', [QuestionBankController::class, 'download'])->name('question.bank.download');
     Route::delete('/academic-hub/question-bank/{file}', [QuestionBankController::class, 'destroy'])->name('question.bank.destroy');
-    
+
     // Course Material Routes
     Route::get('/academic-hub/course-material', [CourseMaterialController::class, 'index'])->name('course.material');
     Route::post('/academic-hub/course-material', [CourseMaterialController::class, 'store'])->name('course.material.store');

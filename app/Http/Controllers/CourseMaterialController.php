@@ -13,7 +13,10 @@ class CourseMaterialController extends Controller
     {
         $search = $request->query('search');
 
-        $query = CourseMaterial::with('user')->latest();
+        // Students only see APPROVED materials
+        $query = CourseMaterial::with('user')
+            ->where('status', 'approved')
+            ->latest();
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -59,17 +62,17 @@ class CourseMaterialController extends Controller
             'file_path'   => $path,
             'file_name'   => $file->getClientOriginalName(),
             'file_size'   => $file->getSize(),
+            'status'      => 'pending', // always pending on upload
         ]);
 
-        return redirect()->route('course.material')->with('success', '✅ Material uploaded successfully!');
+        return redirect()->route('course.material')->with('success', 'Material uploaded! Waiting for admin approval.');
     }
 
     public function destroy(CourseMaterial $courseMaterial)
     {
-        abort_unless(session('is_admin'), 403);
         Storage::disk('public')->delete($courseMaterial->file_path);
         $courseMaterial->delete();
-        return redirect()->back()->with('success', '🗑️ Material deleted.');
+        return redirect()->back()->with('success', 'Material deleted.');
     }
 
     public function download(CourseMaterial $courseMaterial)

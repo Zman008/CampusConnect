@@ -14,6 +14,7 @@ class QuestionBankFile extends Model
         'term',
         'file_path',
         'original_name',
+        'status',
     ];
 
     public function user()

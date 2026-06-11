@@ -11,6 +11,24 @@
                 </div>
             @endif
 
+            {{-- My Pending Uploads Notice --}}
+            @php
+                $myPendingMaterials = \App\Models\CourseMaterial::where('user_id', auth()->id())
+                    ->where('status', 'pending')->get();
+            @endphp
+            @if($myPendingMaterials->count() > 0)
+            <div class="bg-yellow-50 border border-yellow-300 rounded-2xl px-5 py-4 mb-6">
+                <p class="text-yellow-800 font-bold text-sm mb-2">
+                    ⏳ You have {{ $myPendingMaterials->count() }} upload(s) waiting for admin approval:
+                </p>
+                <ul class="list-disc list-inside text-yellow-700 text-xs space-y-1">
+                    @foreach($myPendingMaterials as $p)
+                        <li>{{ $p->course_code }} – {{ $p->title }} ({{ ucfirst($p->type) }})</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             {{-- Hero --}}
             <div class="relative bg-gradient-to-r from-[#003366] to-blue-800 rounded-2xl px-10 py-8 text-white mb-8 overflow-hidden">
                 <div class="relative z-10">
