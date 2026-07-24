@@ -5,18 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@700;800&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <title>{{ $title ?? 'CampusConnect' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="bg-gray-100 text-gray-900 selection:bg-orange-300">
-    <!-- TopNavBar -->
     <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div class="flex justify-between items-center w-full px-8 py-4 max-w-[90%] mx-auto">
             <div class="flex items-center gap-12 text-[#003366]">
@@ -28,23 +23,25 @@
                     Campus Connect
                 </span>
                 <div class="hidden md:flex items-center gap-8">
-                    <!-- Navigation Links -->
                     <a class="{{ request()->is('dashboard') ? 'font-bold border-b-2 border-blue-500' : 'text-slate-500' }} pb-1 transition-all" href="/dashboard">Dashboard</a>
 
                     <!-- Academic Hub Dropdown -->
                     <div class="relative group py-2">
                         <button
-                            class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
+                            class="{{ request()->is('academic-hub*') ? 'text-blue-700 font-bold border-b-2 border-blue-500' : 'text-slate-500' }} font-medium hover:text-blue-700 transition-colors pb-1 flex items-center gap-1 cursor-pointer">
                             Academic Hub
                         </button>
-
-                        <div
-                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                            <div
-                                class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
-                                <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Question Bank</a>
-                                <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Course Material</a>
-                                <a href="#" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Class Links</a>
+                        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
+                                <a href="{{ route('question.bank') }}"
+                                   class="px-4 py-2.5 text-sm {{ request()->routeIs('question.bank') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-blue-700 transition-colors whitespace-nowrap">
+                                   Question Bank
+                                </a>
+                                <a href="{{ route('course.material') }}"
+                                   class="px-4 py-2.5 text-sm {{ request()->routeIs('course.material') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-blue-700 transition-colors whitespace-nowrap">
+                                   Course Material
+                                </a>
+                                <a href="{{ route('class.links') }}" class="px-4 py-2.5 text-sm {{ request()->routeIs('class.links') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-blue-700 transition-colors whitespace-nowrap">Class Links</a>
                                 <a href="/academic-calendar" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Academic Calendar</a>
                             </div>
                         </div>
@@ -52,15 +49,11 @@
 
                     <!-- Planners Dropdown -->
                     <div class="relative group py-2">
-                        <button
-                            class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
+                        <button class="text-slate-500 font-medium hover:text-blue-700 transition-colors border-b-2 border-transparent group-hover:border-blue-500 pb-1 flex items-center gap-1 cursor-pointer">
                             Planners
                         </button>
-
-                        <div
-                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                            <div
-                                class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
+                        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
                                 <a href="/course-planner" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Course Planner</a>
                                 <a href="/section-planner" class="px-4 py-2.5 text-sm text-gray-600 hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">Section Planner</a>
                             </div>
@@ -69,23 +62,15 @@
 
                     <!-- Calculator Dropdown -->
                     <div class="relative group py-2">
-                        <button
-                            class="{{ request()->is('calculator/*') ? 'text-blue-700 font-bold border-b-2 border-blue-500' : 'text-slate-500' }} font-medium hover:text-blue-700 transition-colors pb-1 flex items-center gap-1 cursor-pointer">
+                        <button class="{{ request()->is('calculator/*') ? 'text-blue-700 font-bold border-b-2 border-blue-500' : 'text-slate-500' }} font-medium hover:text-blue-700 transition-colors pb-1 flex items-center gap-1 cursor-pointer">
                             Calculator
                         </button>
-
-                        <div
-                            class="absolute left-1/2 -translate-x-1/2 top-full pt-2 max-w-prose opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                            <div
-                                class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
-
-                                <!-- Updated: Link to the Tuition Fee Calculator route -->
+                        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden flex flex-col py-1">
                                 <a href="{{ route('calculator.tuition') }}"
                                    class="px-4 py-2.5 text-sm {{ request()->routeIs('calculator.tuition') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">
                                    Tuition Fee Calculator
                                 </a>
-
-                                <!-- Link to the CGPA Calculator route -->
                                 <a href="{{ route('calculator.cgpa') }}"
                                     class="px-4 py-2.5 text-sm {{ request()->routeIs('calculator.cgpa') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-gray-600' }} hover:bg-blue-50 hover:text-academic-blue transition-colors whitespace-nowrap">
                                     CGPA Calculator
@@ -96,30 +81,28 @@
 
                     <a class="{{ request()->is('community*') ? 'font-bold border-b-2 border-blue-500' : 'text-slate-500' }} font-medium hover:text-blue-700 transition-colors hover:border-b-2 hover:border-blue-500 pb-1"
                         href="{{ route('community') }}">Community</a>
+
                 </div>
             </div>
+
             <div class="flex items-center gap-4">
                 @auth
                     <span class="text-sm font-medium text-gray-600">Hello, {{ Auth::user()->username }}</span>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button
-                            class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
-                            id="logoutButton"
-                            type="submit">
+                        <button class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
+                            id="logoutButton" type="submit">
                             Log Out
                         </button>
                     </form>
                 @endauth
 
                 @guest
-                    <button
-                        class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
+                    <button class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
                         onclick="window.location.href='/login'">
                         Log In
                     </button>
-                    <button
-                        class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
+                    <button class="px-6 py-2 rounded-full bg-gradient-to-r from-[#003366] to-blue-800 text-white font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/20 hover:cursor-pointer transition-all"
                         onclick="window.location.href='/register'">
                         Sign Up
                     </button>
