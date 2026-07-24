@@ -57,7 +57,11 @@ class AdminController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if ($credentials['username'] === 'admin' && $credentials['password'] === 'admin') {
+        // Use environment-configured admin credentials (defaults kept for local/dev)
+        $adminUser = env('ADMIN_USERNAME', 'admin');
+        $adminPass = env('ADMIN_PASSWORD', 'admin');
+
+        if ($credentials['username'] === $adminUser && $credentials['password'] === $adminPass) {
             $request->session()->regenerate();
             $request->session()->put('is_admin', true);
 

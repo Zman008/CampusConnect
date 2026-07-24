@@ -1,10 +1,16 @@
 FROM php:8.3-cli
 
-# Install system deps + PHP extensions Laravel needs
+# Install system deps needed to build PHP extensions
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev libsqlite3-dev sqlite3 \
-    && docker-php-ext-install pdo pdo_sqlite zip \
+    libonig-dev libxml2-dev libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Use the extension installer script (handles compiling + enabling reliably)
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
+# Install every extension Laravel + common packages need
+RUN install-php-extensions pdo pdo_sqlite zip mbstring xml dom curl fileinfo bcmath ctype tokenize
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -14,8 +20,9 @@ WORKDIR /var/www
 # Copy app code
 COPY . .
 
-# Install PHP deps
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Avoid Composer OOM on free-tier build machines, skip dev/test deps
+ENV COMPOSER_MEMORY_LIMIT=-1
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 # Prepare sqlite db, storage link, cache config
 RUN mkdir -p database && touch database/database.sqlite \
