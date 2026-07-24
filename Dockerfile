@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 # Install every extension Laravel + common packages need
-RUN install-php-extensions pdo pdo_sqlite zip mbstring xml dom curl fileinfo bcmath ctype tokenize
+RUN install-php-extensions pdo pdo_sqlite zip mbstring xml dom curl fileinfo bcmath ctype tokenizer
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
