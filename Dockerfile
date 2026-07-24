@@ -1,3 +1,12 @@
+FROM node:20-slim AS assets
+WORKDIR /var/www
+COPY package*.json ./
+RUN npm install
+COPY resources ./resources
+COPY vite.config.js ./
+COPY public ./public
+RUN npm run build
+
 FROM php:8.4-cli
 
 # Install system deps needed to build PHP extensions
@@ -19,6 +28,9 @@ WORKDIR /var/www
 
 # Copy app code
 COPY . .
+
+# Bring in compiled frontend assets (manifest.json + built css/js)
+COPY --from=assets /var/www/public/build ./public/build
 
 # Avoid Composer OOM on free-tier build machines, skip dev/test deps
 ENV COMPOSER_MEMORY_LIMIT=-1
