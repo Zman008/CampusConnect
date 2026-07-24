@@ -6,30 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('course_materials', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('course_code');
+            $table->string('course_name');
             $table->string('title');
-            
-            // New columns added for Description and Deadline
-            $table->text('description')->nullable(); 
-            $table->date('due_date')->nullable(); 
-            
-            $table->boolean('is_completed')->default(false);
+            $table->enum('type', ['pdf', 'slides', 'assignment', 'book']);
+            $table->string('file_path');
+            $table->string('file_name');
+            $table->unsignedBigInteger('file_size');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('course_materials');
     }
 };
