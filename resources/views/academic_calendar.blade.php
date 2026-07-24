@@ -5,31 +5,31 @@
         $today = now()->startOfDay();
 
         $events = [
-            ['date' => 'Feb 23 - 25, 2026', 'start' => '2026-02-23', 'end' => '2026-02-25', 'day' => 'Mon - Wed', 'title' => 'Course Advising & Registration', 'type' => 'important'],
-            ['date' => 'Feb 25, 2026', 'start' => '2026-02-25', 'day' => 'Wed', 'title' => 'Last day of Course Advising & Registration without Fine', 'type' => 'deadline'],
-            ['date' => 'Feb 28, 2026', 'start' => '2026-02-28', 'day' => 'Sat', 'title' => 'Classes Begin', 'type' => 'important'],
-            ['date' => 'Mar 2, 2026', 'start' => '2026-03-02', 'day' => 'Mon', 'title' => 'Last day to drop course(s) with 100% adjustable refund', 'type' => 'deadline'],
-            ['date' => 'Mar 7, 2026', 'start' => '2026-03-07', 'day' => 'Sat', 'title' => 'Last day to apply for Grade Change of a course (if any) of Fall 2025 Trimester', 'type' => 'important'],
-            ['date' => 'Mar 9, 2026', 'start' => '2026-03-09', 'day' => 'Mon', 'title' => 'Last day to drop course(s) with 50% adjustable refund', 'type' => 'deadline'],
-            ['date' => 'Mar 10, 2026', 'start' => '2026-03-10', 'day' => 'Tue', 'title' => 'Last day of Grade Submission for Project/Thesis (Final Year Design Project/Internship)', 'type' => 'important'],
-            ['date' => 'Mar 15, 2026', 'start' => '2026-03-15', 'day' => 'Sun', 'title' => 'Last day of Course Advising & Registration with a Fine of Tk. 500/-', 'type' => 'deadline'],
-            ['date' => 'Mar 17 - 27, 2026', 'start' => '2026-03-17', 'end' => '2026-03-27', 'day' => 'Tue - Fri', 'title' => "Holiday: Jumu'atul-Widaa/Shab-e-Qad'r/Eid-ul-Fitr/Independence Day", 'type' => 'holiday'],
-            ['date' => 'Mar 31, 2026', 'start' => '2026-03-31', 'day' => 'Tue', 'title' => 'Last day of Grade Submission of Incomplete Grades of Fall 2025 Trimester', 'type' => 'important'],
-            ['date' => 'Apr 12, 2026', 'start' => '2026-04-12', 'day' => 'Sun', 'title' => 'Last date of 1st installment*', 'type' => 'important'],
-            ['date' => 'Apr 13, 2026', 'start' => '2026-04-13', 'day' => 'Mon', 'title' => 'Make-up class: Regular Tuesday Classes', 'type' => 'important'],
-            ['date' => 'Apr 14, 2026', 'start' => '2026-04-14', 'day' => 'Tue', 'title' => 'Holiday: Bangla New Year', 'type' => 'holiday'],
-            ['date' => 'Apr 18 - 24, 2026', 'start' => '2026-04-18', 'end' => '2026-04-24', 'day' => 'Sat - Fri', 'title' => 'Mid-Term Exam', 'type' => 'exam'],
-            ['date' => 'Apr 25, 2026', 'start' => '2026-04-25', 'day' => 'Sat', 'title' => 'Regular Tuesday Classes', 'type' => 'important'],
-            ['date' => 'Apr 26, 2026', 'start' => '2026-04-26', 'day' => 'Sun', 'title' => 'Regular Wednesday Classes', 'type' => 'important'],
-            ['date' => 'May 1, 2026', 'start' => '2026-05-01', 'day' => 'Fri', 'title' => 'Holiday: Buddha Purnima and May Day', 'type' => 'holiday'],
-            ['date' => 'May 4, 2026', 'start' => '2026-05-04', 'day' => 'Mon', 'title' => 'Last Date for Course Withdrawal', 'type' => 'deadline'],
-            ['date' => 'May 12, 2026', 'start' => '2026-05-12', 'day' => 'Tue', 'title' => 'Last date of 2nd Installment**', 'type' => 'deadline'],
-            ['date' => 'May 26 - June 05, 2026', 'start' => '2026-05-26', 'end' => '2026-06-05', 'day' => 'Tue - Fri', 'title' => 'Holiday: Eid-ul-Adha', 'type' => 'holiday'],
-            ['date' => 'June 14, 2026', 'start' => '2026-06-14', 'day' => 'Sun', 'title' => 'Last date of 3rd installment***', 'type' => 'important'],
-            ['date' => 'June 18 - 20, 2026', 'start' => '2026-06-18', 'end' => '2026-06-20', 'day' => 'Thu - Sat', 'title' => 'Classes will remain suspended for Exam preparation', 'type' => 'notice'],
-            ['date' => 'June 21 - 28, 2026', 'start' => '2026-06-21', 'end' => '2026-06-28', 'day' => 'Sun - Sun', 'title' => 'Final Exam', 'type' => 'exam'],
-            ['date' => 'June 26, 2026', 'start' => '2026-06-26', 'day' => 'Fri', 'title' => 'Holiday: Ashura****', 'type' => 'holiday'],
-            ['date' => 'July 2, 2026', 'start' => '2026-07-02', 'day' => 'Thu', 'title' => 'Last date of Grade Submission (including Self-Study courses)', 'type' => 'important'],
+            ['date' => 'Jul 4 - 6, 2026', 'start' => '2026-07-04', 'end' => '2026-07-06', 'day' => 'Sat - Mon', 'title' => 'Course Advising & Registration', 'type' => 'important'],
+            ['date' => 'Jul 6, 2026', 'start' => '2026-07-06', 'day' => 'Mon', 'title' => 'Last day of Course Advising & Registration without Fine', 'type' => 'deadline'],
+            ['date' => 'Jul 6, 2026', 'start' => '2026-07-06', 'day' => 'Mon', 'title' => 'Open Day Orientation', 'type' => 'important'],
+            ['date' => 'Jul 7, 2026', 'start' => '2026-07-07', 'day' => 'Tue', 'title' => 'Classes Begin', 'type' => 'important'],
+            ['date' => 'Jul 11, 2026', 'start' => '2026-07-11', 'day' => 'Sat', 'title' => 'Last day to drop course(s) with 100% adjustable refund', 'type' => 'deadline'],
+            ['date' => 'Jul 15, 2026', 'start' => '2026-07-15', 'day' => 'Wed', 'title' => 'Last day to apply for Grade Change of a course (if any) of Spring 2026 Trimester', 'type' => 'deadline'],
+            ['date' => 'Jul 15, 2026', 'start' => '2026-07-15', 'day' => 'Wed', 'title' => 'Note: No application will be considered after the deadline.', 'type' => 'notice'],
+            ['date' => 'Jul 19, 2026', 'start' => '2026-07-19', 'day' => 'Sun', 'title' => 'Last day of Grade Submission for Project/ Thesis (Final Year Design Project)/ Internship', 'type' => 'important'],
+            ['date' => 'Jul 20, 2026', 'start' => '2026-07-20', 'day' => 'Mon', 'title' => 'Last day to drop course(s) with 50% adjustable refund only', 'type' => 'deadline'],
+            ['date' => 'Jul 20, 2026', 'start' => '2026-07-20', 'day' => 'Mon', 'title' => 'Last day of Course Advising & Registration with a Fine of Tk. 500/-', 'type' => 'deadline'],
+            ['date' => 'Jul 20, 2026', 'start' => '2026-07-20', 'day' => 'Mon', 'title' => 'Last day of Grade Submission of Incomplete Grades of Spring 2026 Trimester by concerned Department/Program Office', 'type' => 'important'],
+            ['date' => 'Aug 5, 2026', 'start' => '2026-08-05', 'day' => 'Wed', 'title' => 'Holiday: July Mass Uprising Day', 'type' => 'holiday'],
+            ['date' => 'Aug 11, 2026', 'start' => '2026-08-11', 'day' => 'Tue', 'title' => 'Last date of 1st installment*', 'type' => 'deadline'],
+            ['date' => 'Aug 18, 2026', 'start' => '2026-08-18', 'day' => 'Tue', 'title' => 'Regular Saturday Classes', 'type' => 'important'],
+            ['date' => 'Aug 22 - 29, 2026', 'start' => '2026-08-22', 'end' => '2026-08-29', 'day' => 'Sat - Sat', 'title' => 'Mid-Term Exam', 'type' => 'exam'],
+            ['date' => 'Aug 26, 2026', 'start' => '2026-08-26', 'day' => 'Wed', 'title' => 'Holiday: Eid-e-Miladunnabi****', 'type' => 'holiday'],
+            ['date' => 'Sep 4, 2026', 'start' => '2026-09-04', 'day' => 'Fri', 'title' => 'Holiday: Janmashtami', 'type' => 'holiday'],
+            ['date' => 'Sep 9, 2026', 'start' => '2026-09-09', 'day' => 'Wed', 'title' => 'Last Day of Course Withdrawal', 'type' => 'deadline'],
+            ['date' => 'Sep 15, 2026', 'start' => '2026-09-15', 'day' => 'Tue', 'title' => 'Last date of 2nd Installment**', 'type' => 'deadline'],
+            ['date' => 'Sep 24, 2026', 'start' => '2026-09-24', 'day' => 'Thu', 'title' => 'Regular Wednesday Classes', 'type' => 'important'],
+            ['date' => 'Oct 6, 2026', 'start' => '2026-10-06', 'day' => 'Tue', 'title' => 'Last date of 3rd installment***', 'type' => 'deadline'],
+            ['date' => 'Oct 7 - 9, 2026', 'start' => '2026-10-07', 'end' => '2026-10-09', 'day' => 'Wed - Fri', 'title' => 'Classes will remain suspended', 'type' => 'notice'],
+            ['date' => 'Oct 10 - 17, 2026', 'start' => '2026-10-10', 'end' => '2026-10-17', 'day' => 'Sat - Sat', 'title' => 'Final Exam', 'type' => 'exam'],
+            ['date' => 'Oct 20 - 21, 2026', 'start' => '2026-10-20', 'end' => '2026-10-21', 'day' => 'Tue - Wed', 'title' => 'Holiday: Durga Puja', 'type' => 'holiday'],
+            ['date' => 'Oct 22, 2026', 'start' => '2026-10-22', 'day' => 'Thu', 'title' => 'Last day of Grade Submission (including Self-Study courses)', 'type' => 'important'],
         ];
 
         $typeStyles = [
@@ -65,10 +65,10 @@
                     <div class="mb-3 flex flex-wrap items-center gap-2">
                         <span class="inline-flex items-center gap-2 rounded-full bg-[#003366] px-3.5 py-1.5 text-xs font-black uppercase tracking-[0.16em] text-white">
                             <span class="material-symbols-outlined text-base">calendar_month</span>
-                            Spring 2026
+                            Summer 2026
                         </span>
                         <span class="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                            Feb 23 - Jul 2
+                            Jul 4 - Oct 22
                         </span>
                     </div>
                     <h1 class="text-3xl font-black tracking-tight text-[#003366] md:text-4xl">Academic Calendar</h1>
@@ -107,7 +107,7 @@
                         <p class="text-sm font-bold text-slate-500">Trimester Start</p>
                         <span class="material-symbols-outlined rounded-xl bg-blue-50 p-2 text-blue-600">flag</span>
                     </div>
-                    <p class="mt-4 font-['Manrope',Inter,sans-serif] text-2xl font-black text-slate-900 tabular-nums">Feb 28, 2026</p>
+                    <p class="mt-4 font-['Manrope',Inter,sans-serif] text-2xl font-black text-slate-900 tabular-nums">Jul 7, 2026</p>
                 </div>
 
                 <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -131,7 +131,7 @@
                         <p class="text-sm font-bold text-slate-500">Final Exam</p>
                         <span class="material-symbols-outlined rounded-xl bg-violet-50 p-2 text-violet-600">school</span>
                     </div>
-                    <p class="mt-4 font-['Manrope',Inter,sans-serif] text-2xl font-black text-slate-900 tabular-nums">June 21 - 28</p>
+                    <p class="mt-4 font-['Manrope',Inter,sans-serif] text-2xl font-black text-slate-900 tabular-nums">Oct 10 - 17</p>
                 </div>
             </section>
 
