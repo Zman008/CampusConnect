@@ -9,7 +9,7 @@ RUN npm run build
 
 FROM php:8.4-cli
 
-# Install system deps needed to build PHP extensions
+# Install system dependencies needed to build PHP extensions
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev libsqlite3-dev sqlite3 \
     libonig-dev libxml2-dev libcurl4-openssl-dev \
