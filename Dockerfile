@@ -9,6 +9,10 @@ RUN npm run build
 
 FROM php:8.4-cli
 
+# Install Litestream for real-time SQLite syncing to Cloudflare R2
+ADD https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.tar.gz /tmp/litestream.tar.gz
+RUN tar -C /usr/local/bin -xzf /tmp/litestream.tar.gz
+
 # Install system deps needed to build PHP extensions
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev libsqlite3-dev sqlite3 \
@@ -43,8 +47,9 @@ RUN mkdir -p database && touch database/database.sqlite \
 
 EXPOSE 10000
 
-# Run migrations then start the built-in server on Render's expected port
-CMD php artisan migrate --force \
+# Restore the database from R2, then run migrations and replicate while serving Laravel
+CMD litestream restore -v -if-replica-exists -o /var/www/database/database.sqlite "s3://${AWS_BUCKET}/db?endpoint=${AWS_ENDPOINT}&region=us-east-1&forcePathStyle=true" \
+    && php artisan migrate --force \
     && php artisan storage:link || true \
     && php artisan config:cache \
-    && php artisan serve --host 0.0.0.0 --port 10000
+    && litestream replicate -exec "php artisan serve --host 0.0.0.0 --port 10000" /var/www/database/database.sqlite "s3://${AWS_BUCKET}/db?endpoint=${AWS_ENDPOINT}&region=us-east-1&forcePathStyle=true"
