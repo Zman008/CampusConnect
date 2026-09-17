@@ -29,7 +29,7 @@ class QuestionBankController extends Controller
             'file'        => 'required|file|mimes:pdf|max:10240',
         ]);
 
-        $path = $request->file('file')->store('question-bank', 'public');
+        $path = $request->file('file')->store('question-bank', 's3');
 
         QuestionBankFile::create([
             'user_id'       => auth()->id(),
@@ -47,7 +47,7 @@ class QuestionBankController extends Controller
 
     public function download(QuestionBankFile $file)
     {
-        return Storage::disk('public')->download(
+        return Storage::disk('s3')->download(
             $file->file_path,
             $file->original_name
         );
@@ -55,7 +55,7 @@ class QuestionBankController extends Controller
 
     public function destroy(QuestionBankFile $file)
     {
-        Storage::disk('public')->delete($file->file_path);
+        Storage::disk('s3')->delete($file->file_path);
         $file->delete();
 
         return back()->with('success', 'Question paper deleted successfully!');

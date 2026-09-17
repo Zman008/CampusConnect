@@ -191,7 +191,7 @@ class AdminController extends Controller
     public function deleteQuestionBankFile(QuestionBankFile $file)
     {
         $this->ensureAdmin();
-        \Illuminate\Support\Facades\Storage::disk('public')->delete($file->file_path);
+        \Illuminate\Support\Facades\Storage::disk('s3')->delete($file->file_path);
         $file->delete();
 
         return redirect(route('admin.index') . '#questionbank')->with('success', 'Question paper deleted.');
@@ -215,7 +215,7 @@ class AdminController extends Controller
     {
         $this->ensureAdmin();
 
-        return \Illuminate\Support\Facades\Storage::disk('public')->download(
+        return \Illuminate\Support\Facades\Storage::disk('s3')->download(
             $file->file_path,
             $file->original_name
         );
@@ -225,7 +225,7 @@ class AdminController extends Controller
     {
         $this->ensureAdmin();
 
-        return \Illuminate\Support\Facades\Storage::disk('public')->download(
+        return \Illuminate\Support\Facades\Storage::disk('s3')->download(
             $courseMaterial->file_path,
             $courseMaterial->file_name
         );
@@ -242,7 +242,7 @@ class AdminController extends Controller
     public function deleteCourseMaterial(CourseMaterial $courseMaterial)
     {
         $this->ensureAdmin();
-        \Illuminate\Support\Facades\Storage::disk('public')->delete($courseMaterial->file_path);
+        \Illuminate\Support\Facades\Storage::disk('s3')->delete($courseMaterial->file_path);
         $courseMaterial->delete();
 
         return redirect(route('admin.index') . '#coursematerial')->with('success', 'Course material deleted.');

@@ -51,7 +51,7 @@ class CourseMaterialController extends Controller
         ]);
 
         $file = $request->file('file');
-        $path = $file->store('course-materials', 'public');
+        $path = $file->store('course-materials', 's3');
 
         CourseMaterial::create([
             'user_id'     => Auth::id(),
@@ -70,13 +70,13 @@ class CourseMaterialController extends Controller
 
     public function destroy(CourseMaterial $courseMaterial)
     {
-        Storage::disk('public')->delete($courseMaterial->file_path);
+        Storage::disk('s3')->delete($courseMaterial->file_path);
         $courseMaterial->delete();
         return redirect()->back()->with('success', 'Material deleted.');
     }
 
     public function download(CourseMaterial $courseMaterial)
     {
-        return Storage::disk('public')->download($courseMaterial->file_path, $courseMaterial->file_name);
+        return Storage::disk('s3')->download($courseMaterial->file_path, $courseMaterial->file_name);
     }
 }
