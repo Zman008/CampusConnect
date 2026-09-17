@@ -48,9 +48,9 @@ RUN mkdir -p database && touch database/database.sqlite \
 EXPOSE 10000
 
 # Restore the database from R2, then run migrations and replicate while serving Laravel
-CMD litestream restore -v -if-replica-exists -o /var/www/database/database.sqlite "s3://${AWS_BUCKET}/db?endpoint=${AWS_ENDPOINT}&region=us-east-1&forcePathStyle=true" \
+CMD litestream restore -if-replica-exists -o /var/www/database/database.sqlite "s3://${AWS_BUCKET}/db?endpoint=${AWS_ENDPOINT}&region=${AWS_DEFAULT_REGION}&forcePathStyle=true" \
     && php artisan migrate --force \
     && sqlite3 /var/www/database/database.sqlite "CREATE TABLE IF NOT EXISTS sessions (id VARCHAR(255) PRIMARY KEY NOT NULL, user_id INTEGER NULL, ip_address VARCHAR(45) NULL, user_agent TEXT NULL, payload TEXT NOT NULL, last_activity INTEGER NOT NULL); CREATE INDEX IF NOT EXISTS sessions_user_id_index ON sessions (user_id); CREATE INDEX IF NOT EXISTS sessions_last_activity_index ON sessions (last_activity);" \
-    && php artisan storage:link || true \
+    && (php artisan storage:link || true) \
     && php artisan config:cache \
-    && litestream replicate -exec "php artisan serve --host 0.0.0.0 --port 10000" /var/www/database/database.sqlite "s3://${AWS_BUCKET}/db?endpoint=${AWS_ENDPOINT}&region=us-east-1&forcePathStyle=true"
+    && litestream replicate -exec "php artisan serve --host 0.0.0.0 --port 10000" /var/www/database/database.sqlite "s3://${AWS_BUCKET}/db?endpoint=${AWS_ENDPOINT}&region=${AWS_DEFAULT_REGION}&forcePathStyle=true"
