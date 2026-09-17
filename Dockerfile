@@ -10,7 +10,7 @@ RUN npm run build
 FROM php:8.4-cli
 
 # Install Litestream for real-time SQLite syncing to Cloudflare R2
-ADD https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.tar.gz /tmp/litestream.tar.gz
+ADD https://github.com/benbjohnson/litestream/releases/download/v0.5.12/litestream-v0.5.12-linux-amd64.tar.gz /tmp/litestream.tar.gz
 RUN tar -C /usr/local/bin -xzf /tmp/litestream.tar.gz
 
 # Install system deps needed to build PHP extensions
