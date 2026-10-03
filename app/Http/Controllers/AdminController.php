@@ -283,3 +283,4 @@ class AdminController extends Controller
         abort_unless(session('is_admin'), 403, 'Unauthorized administrative access.');
     }
 }
+
